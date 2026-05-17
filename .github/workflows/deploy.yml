@@ -13,12 +13,15 @@ jobs:
     - name: Get latest code
       uses: actions/checkout@v4
     
-    - name: Sync files
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: www/samplesite/
-        security: loose
-        log-level: verbose
+    - name: Install lftp
+      run: sudo apt-get update && sudo apt-get install -y lftp
+
+    - name: Sync files via lftp
+      run: |
+        lftp -c "
+          set ftp:ipv6-allow false;
+          set ftp:ssl-allow true;
+          set ssl:verify-certificate false;
+          open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' '${{ secrets.FTP_SERVER }}';
+          mirror -R -v --delete --exclude-glob .git/ --exclude-glob .github/ --exclude-glob .gitignore ./ www/samplesite/
+        "
