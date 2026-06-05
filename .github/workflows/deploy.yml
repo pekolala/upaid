@@ -23,5 +23,5 @@ jobs:
           set ftp:ssl-allow true;
           set ssl:verify-certificate false;
           open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' '${{ secrets.FTP_SERVER }}';
-          mirror -R -v --delete --exclude-glob .git/ --exclude-glob .github/ --exclude-glob .gitignore ./ www/samplesite/
+          mirror -R -v --delete --exclude-glob .git/ --exclude-glob .github/ --exclude-glob .gitignore ./ www/upaid/
         "

@@ -1,0 +1,487 @@
+/* Custom CSS for Hearing Form */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+
+:root {
+    --primary-color: #0f172a; /* Slate 900 / Dark Navy */
+    --primary-light: #1e293b; /* Slate 800 */
+    --accent-color: #f59e0b;  /* Amber 500 */
+    --accent-hover: #d97706;  /* Amber 600 */
+    --bg-color: #f8fafc;      /* Slate 50 / Very Light Blue-Gray */
+    --card-bg: #ffffff;
+    --text-main: #334155;     /* Slate 700 */
+    --text-dark: #0f172a;     /* Slate 900 */
+    --text-muted: #64748b;    /* Slate 500 */
+    --border-color: #e2e8f0;  /* Slate 200 */
+    --focus-ring: rgba(245, 158, 11, 0.2);
+    --success-color: #10b981; /* Emerald 500 */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    padding-bottom: 4rem;
+}
+
+/* Header & Navigation */
+header {
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.header-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Progress Bar Container */
+.progress-container {
+    position: sticky;
+    top: 57px; /* Below header */
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 99;
+}
+
+.progress-bar-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.progress-bar-bg {
+    background: var(--border-color);
+    height: 6px;
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    background: var(--accent-color);
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* Main Layout */
+main {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.intro-section {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.intro-section h1 {
+    font-size: 1.75rem;
+    color: var(--text-dark);
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+}
+
+.intro-section p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* Card Styling */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+    font-size: 1.25rem;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 1.75rem;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-label {
+    display: block;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.required-badge {
+    background-color: #ef4444;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.25rem;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+/* Input Fields */
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--text-dark);
+    background-color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Radio & Checkbox Custom Styling */
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+}
+
+@media (min-width: 600px) {
+    .options-grid.cols-2 {
+        grid-template-columns: 1fr 1fr;
+    }
+    .options-grid.cols-3 {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    .options-grid.cols-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.option-control {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.option-control:hover {
+    border-color: var(--accent-color);
+    background-color: var(--bg-color);
+}
+
+.option-control input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.option-text {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    padding-left: 2rem;
+    position: relative;
+}
+
+/* Custom Checkmark/Radio indicator */
+.option-text::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid var(--border-color);
+    background: #fff;
+    transition: all 0.2s;
+}
+
+/* Checkbox specific */
+input[type="checkbox"] + .option-text::before {
+    border-radius: 0.25rem;
+}
+
+/* Radio specific */
+input[type="radio"] + .option-text::before {
+    border-radius: 50%;
+}
+
+/* Checked state styling */
+.option-control input:checked + .option-text::before {
+    border-color: var(--accent-color);
+    background-color: var(--accent-color);
+}
+
+.option-control input:checked + .option-text {
+    color: var(--text-dark);
+}
+
+.option-control input:checked {
+    /* highlight parent card */
+}
+.option-control.active {
+    border-color: var(--accent-color);
+    background-color: rgba(245, 158, 11, 0.05);
+}
+
+/* Checkmark check symbol */
+input[type="checkbox"] + .option-text::after {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 50%;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: translateY(-60%) rotate(45deg);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+input[type="checkbox"]:checked + .option-text::after {
+    opacity: 1;
+}
+
+/* Radio dot symbol */
+input[type="radio"] + .option-text::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+input[type="radio"]:checked + .option-text::after {
+    opacity: 1;
+}
+
+/* Conditional Field Display */
+.conditional-field {
+    display: none;
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: var(--bg-color);
+    border-radius: 0.5rem;
+    border-left: 3px solid var(--accent-color);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.conditional-field.show {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Complex Section List Table for ⑤ 掲載内容・写真の有無 */
+.section-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.75rem;
+}
+
+.section-table th, .section-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.section-table th {
+    font-weight: 700;
+    color: var(--text-dark);
+    background-color: var(--bg-color);
+}
+
+.section-table td {
+    vertical-align: middle;
+}
+
+.checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.checkbox-label input {
+    margin-right: 0.5rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--accent-color);
+}
+
+/* Buttons */
+.btn-container {
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.btn-submit {
+    background-color: var(--accent-color);
+    color: #fff;
+    border: none;
+    padding: 1.25rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 9999px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2);
+    transition: all 0.2s;
+    width: 100%;
+    max-width: 400px;
+}
+
+.btn-submit:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+    box-shadow: 0 8px 12px rgba(245, 158, 11, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-submit:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-submit:disabled {
+    background-color: var(--border-color);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.85);
+    z-index: 1000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.loading-overlay.show {
+    display: flex;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.success-message-wrapper {
+    text-align: center;
+    padding: 3rem 1.5rem;
+}
+
+.success-icon {
+    font-size: 4rem;
+    color: var(--success-color);
+    margin-bottom: 1.5rem;
+}
+
+.success-title {
+    font-size: 1.5rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ホームページ制作ヒアリングフォーム | up aid</title>
+    <meta name="description" content="お客様のご希望に沿ったホームページを制作するためのヒアリングフォームです。">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="../" class="logo">
+                <span>🌱</span> 街のWeb制作・管理～up aid～
+            </a>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar-wrapper">
+            <div class="progress-info">
+                <span>回答の進捗状況</span>
+                <span id="progress-text">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="intro-section">
+            <h1>ホームページ制作ヒアリングフォーム</h1>
+            <p>イメージに合ったホームページを制作するため、可能な範囲でご回答をお願いいたします。</p>
+        </div>
+
+        <form id="hearingForm">
+            <!-- ① 基本情報 -->
+            <section class="card" data-section="1">
+                <h2 class="card-title">① 基本情報</h2>
+                
+                <div class="form-group">
+                    <label class="form-label" for="company_name">会社名・店舗名<span class="required-badge">必須</span></label>
+                    <input type="text" id="company_name" name="company_name" placeholder="株式会社〇〇、〇〇カフェ など" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="manager_name">担当者名<span class="required-badge">必須</span></label>
+                    <input type="text" id="manager_name" name="manager_name" placeholder="山田 太郎" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="phone">電話番号<span class="required-badge">必須</span></label>
+                    <input type="tel" id="phone" name="phone" placeholder="090-0000-0000" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">メールアドレス<span class="required-badge">必須</span></label>
+                    <input type="email" id="email" name="email" placeholder="example@example.com" required>
+                </div>
+            </section>
+
+            <!-- ② サイトの目的 -->
+            <section class="card" data-section="2">
+                <h2 class="card-title">② サイトの目的</h2>
+                <div class="form-group">
+                    <label class="form-label">主な目的（いずれか1つを選択）<span class="required-badge">必須</span></label>
+                    <div class="options-grid cols-2">
+                        <label class="option-control">
+                            <input type="radio" name="site_purpose" value="会社案内" required>
+                            <span class="option-text">会社案内</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="site_purpose" value="店舗紹介">
+                            <span class="option-text">店舗紹介</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="site_purpose" value="商品紹介">
+                            <span class="option-text">商品紹介</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="site_purpose" value="求人">
+                            <span class="option-text">求人</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="site_purpose" value="その他" id="purpose_other_radio">
+                            <span class="option-text">その他</span>
+                        </label>
+                    </div>
+                    
+                    <!-- 条件付き自由記述欄 -->
+                    <div class="conditional-field" id="purpose_other_container">
+                        <label class="form-label" for="purpose_other_text">具体的な目的をご記入ください</label>
+                        <textarea id="purpose_other_text" name="purpose_other_text" placeholder="例：イベントの特設ランディングページなど、具体的にご記入ください。"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ③ ターゲット -->
+            <section class="card" data-section="3">
+                <h2 class="card-title">③ ターゲット</h2>
+                
+                <div class="form-group">
+                    <label class="form-label" for="target_age">年齢層</label>
+                    <input type="text" id="target_age" name="target_age" placeholder="例：20代〜30代、シニア層など">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="target_gender">性別</label>
+                    <input type="text" id="target_gender" name="target_gender" placeholder="例：女性メイン、男女問わず など">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="target_region">地域</label>
+                    <input type="text" id="target_region" name="target_region" placeholder="例：東京都内、全国、地元密着（〇〇市）など">
+                </div>
+            </section>
+
+            <!-- ④ デザイン -->
+            <section class="card" data-section="4">
+                <h2 class="card-title">④ デザイン</h2>
+                
+                <div class="form-group">
+                    <label class="form-label" for="design_hope">希望するデザインイメージ</label>
+                    <textarea id="design_hope" name="design_hope" placeholder="例：シンプルで清潔感があり、文字が大きめのデザインが良い など"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">希望する色味（複数選択可）</label>
+                    <div class="options-grid cols-3">
+                        <label class="option-control">
+                            <input type="checkbox" name="design_color" value="黒">
+                            <span class="option-text">黒</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="checkbox" name="design_color" value="白">
+                            <span class="option-text">白</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="checkbox" name="design_color" value="赤">
+                            <span class="option-text">赤</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="checkbox" name="design_color" value="青">
+                            <span class="option-text">青</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="checkbox" name="design_color" value="黄">
+                            <span class="option-text">黄</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="checkbox" name="design_color" value="緑">
+                            <span class="option-text">緑</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">希望する雰囲気（複数選択可）</label>
+                    <div class="options-grid cols-2">
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="洗練された"><span class="option-text">洗練された</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="落ち着いた"><span class="option-text">落ち着いた</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="シンプル"><span class="option-text">シンプル</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="動きのある"><span class="option-text">動きのある</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="信頼感"><span class="option-text">信頼感</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="あたたかみ"><span class="option-text">あたたかみ</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="ラグジュアリー"><span class="option-text">ラグジュアリー</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="エレガント"><span class="option-text">エレガント</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="プレミアム"><span class="option-text">プレミアム</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="シック"><span class="option-text">シック</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="クリーン"><span class="option-text">クリーン</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="オーソドックス"><span class="option-text">オーソドックス</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="ミニマル"><span class="option-text">ミニマル</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="ニュートラル"><span class="option-text">ニュートラル</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="インテリジェンス"><span class="option-text">インテリジェンス</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="ポップ"><span class="option-text">ポップ</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="キュート"><span class="option-text">キュート</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="アットホーム"><span class="option-text">アットホーム</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="カジュアル"><span class="option-text">カジュアル</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="パステル"><span class="option-text">パステル</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="モダン"><span class="option-text">モダン</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="スタイリッシュ"><span class="option-text">スタイリッシュ</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="ダイナミック"><span class="option-text">ダイナミック</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="フューチャリスティック"><span class="option-text">フューチャリスティック</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="ソリッド"><span class="option-text">ソリッド</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="ナチュラル"><span class="option-text">ナチュラル</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="オーガニック"><span class="option-text">オーガニック</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="クラフト感"><span class="option-text">クラフト感</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="リラクシー"><span class="option-text">リラクシー</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="アースカラー"><span class="option-text">アースカラー</span></label>
+                        <label class="option-control"><input type="checkbox" name="design_vibe" value="その他" id="vibe_other_checkbox"><span class="option-text">その他</span></label>
+                    </div>
+
+                    <!-- 条件付き雰囲気自由記述欄 -->
+                    <div class="conditional-field" id="vibe_other_container">
+                        <label class="form-label" for="vibe_other_text">ご希望の雰囲気を具体的にご記入ください</label>
+                        <input type="text" id="vibe_other_text" name="vibe_other_text" placeholder="例：北欧風、レトロポップなど">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="reference_site_name">参考サイト名</label>
+                    <input type="text" id="reference_site_name" name="reference_site_name" placeholder="例：競合他社のA社、デザインが綺麗なB店など">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="reference_site_url">参考サイトURL</label>
+                    <input type="text" id="reference_site_url" name="reference_site_url" placeholder="https://example.com">
+                </div>
+            </section>
+
+            <!-- ⑤ 掲載内容・写真の有無 -->
+            <section class="card" data-section="5">
+                <h2 class="card-title">⑤ 掲載内容・写真の有無</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">必要なセクション（該当するものにチェック）</label>
+                    <table class="section-table">
+                        <thead>
+                            <tr>
+                                <th>セクション名</th>
+                                <th>【掲載する】</th>
+                                <th>【写真あり】</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ヒーローセクション（トップページ）</td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_hero_show" value="1" checked> 掲載</label></td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_hero_photo" value="1" checked> あり</label></td>
+                            </tr>
+                            <tr>
+                                <td>お知らせ</td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_news_show" value="1"> 掲載</label></td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_news_photo" value="1"> あり</label></td>
+                            </tr>
+                            <tr>
+                                <td>会社概要</td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_profile_show" value="1"> 掲載</label></td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_profile_photo" value="1"> あり</label></td>
+                            </tr>
+                            <tr>
+                                <td>事業内容</td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_business_show" value="1"> 掲載</label></td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_business_photo" value="1"> あり</label></td>
+                            </tr>
+                            <tr>
+                                <td>代表あいさつ</td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_greeting_show" value="1"> 掲載</label></td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_greeting_photo" value="1"> あり</label></td>
+                            </tr>
+                            <tr>
+                                <td>サービス</td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_service_show" value="1"> 掲載</label></td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_service_photo" value="1"> あり</label></td>
+                            </tr>
+                            <tr>
+                                <td>商品紹介</td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_products_show" value="1"> 掲載</label></td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_products_photo" value="1"> あり</label></td>
+                            </tr>
+                            <tr>
+                                <td>Googleマップ埋め込み</td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_map_show" value="1"> 掲載</label></td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_map_photo" value="1"> あり</label></td>
+                            </tr>
+                            <tr>
+                                <td>アクセス</td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_access_show" value="1"> 掲載</label></td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_access_photo" value="1"> あり</label></td>
+                            </tr>
+                            <tr>
+                                <td>お問い合わせフォーム</td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_contact_show" value="1"> 掲載</label></td>
+                                <td><label class="checkbox-label"><input type="checkbox" name="sec_contact_photo" value="1"> あり</label></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="sec_other">その他（掲載したい内容やセクション）</label>
+                    <input type="text" id="sec_other" name="sec_other" placeholder="例：よくあるご質問、お客様の声 など">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="photo_count">掲載したい画像枚数</label>
+                    <input type="number" id="photo_count" name="photo_count" min="0" placeholder="0">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">各セクションに掲載したい文章（【掲載する】にチェックを入れたセクションのみ表示されます）</label>
+                    <div id="section_texts_container">
+                        <!-- Hero Section Text -->
+                        <div class="conditional-field" id="sec_hero_text_container">
+                            <label class="form-label" for="sec_hero_text">ヒーローセクション（トップページ）に掲載したい文章</label>
+                            <textarea id="sec_hero_text" name="sec_hero_text" placeholder="メインコピー、サブコピー、キャッチフレーズ、または全体の要約などをご記入ください。"></textarea>
+                        </div>
+                        <!-- News Section Text -->
+                        <div class="conditional-field" id="sec_news_text_container">
+                            <label class="form-label" for="sec_news_text">お知らせに掲載したい文章</label>
+                            <textarea id="sec_news_text" name="sec_news_text" placeholder="お知らせ欄に最初期に記載したい内容や、更新についてのルールなどがあればご記入ください。"></textarea>
+                        </div>
+                        <!-- Profile Section Text -->
+                        <div class="conditional-field" id="sec_profile_text_container">
+                            <label class="form-label" for="sec_profile_text">会社概要に掲載したい文章</label>
+                            <textarea id="sec_profile_text" name="sec_profile_text" placeholder="所在地、設立日、代表者名、資本金、事業内容、営業時間などの情報をご記入ください。"></textarea>
+                        </div>
+                        <!-- Business Section Text -->
+                        <div class="conditional-field" id="sec_business_text_container">
+                            <label class="form-label" for="sec_business_text">事業内容に掲載したい文章</label>
+                            <textarea id="sec_business_text" name="sec_business_text" placeholder="提供しているサービスや事業の詳しい内容、それぞれの特徴などをご記入ください。"></textarea>
+                        </div>
+                        <!-- Greeting Section Text -->
+                        <div class="conditional-field" id="sec_greeting_text_container">
+                            <label class="form-label" for="sec_greeting_text">代表あいさつに掲載したい文章</label>
+                            <textarea id="sec_greeting_text" name="sec_greeting_text" placeholder="代表者様からのメッセージや挨拶文をご記入ください。"></textarea>
+                        </div>
+                        <!-- Service Section Text -->
+                        <div class="conditional-field" id="sec_service_text_container">
+                            <label class="form-label" for="sec_service_text">サービスに掲載したい文章</label>
+                            <textarea id="sec_service_text" name="sec_service_text" placeholder="提供しているサービスの流れや、アピールポイントなどをご記入ください。"></textarea>
+                        </div>
+                        <!-- Products Section Text -->
+                        <div class="conditional-field" id="sec_products_text_container">
+                            <label class="form-label" for="sec_products_text">商品紹介に掲載したい文章</label>
+                            <textarea id="sec_products_text" name="sec_products_text" placeholder="取り扱っている主な商品の名称、特徴、価格帯などをご記入ください。"></textarea>
+                        </div>
+                        <!-- Map Section Text -->
+                        <div class="conditional-field" id="sec_map_text_container">
+                            <label class="form-label" for="sec_map_text">Googleマップ埋め込み位置に記載したい内容</label>
+                            <textarea id="sec_map_text" name="sec_map_text" placeholder="マップの周辺に記載したい住所の詳細や目印、注意書きなどをご記入ください。"></textarea>
+                        </div>
+                        <!-- Access Section Text -->
+                        <div class="conditional-field" id="sec_access_text_container">
+                            <label class="form-label" for="sec_access_text">アクセスに掲載したい文章</label>
+                            <textarea id="sec_access_text" name="sec_access_text" placeholder="最寄り駅からの徒歩ルート、車でのアクセス方法、駐車場の有無などをご記入ください。"></textarea>
+                        </div>
+                        <!-- Contact Section Text -->
+                        <div class="conditional-field" id="sec_contact_text_container">
+                            <label class="form-label" for="sec_contact_text">お問い合わせフォームに掲載したい文章</label>
+                            <textarea id="sec_contact_text" name="sec_contact_text" placeholder="「お問い合わせはお電話でも承ります」「通常2日以内に返信いたします」などの注意書きをご記入ください。"></textarea>
+                        </div>
+                        <!-- Other Section Text -->
+                        <div class="conditional-field" id="sec_other_text_container">
+                            <label class="form-label" for="sec_other_text" id="sec_other_text_label">その他セクションの文章</label>
+                            <textarea id="sec_other_text" name="sec_other_text" placeholder="その他に追加した項目について、掲載したい具体的な文章をご記入ください。"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ⑥ 機能 -->
+            <section class="card" data-section="6">
+                <h2 class="card-title">⑥ 機能</h2>
+                <div class="form-group">
+                    <label class="form-label">必要な機能（複数選択可）</label>
+                    <div class="options-grid cols-2">
+                        <label class="option-control"><input type="checkbox" name="features" value="お問い合わせフォーム"><span class="option-text">お問い合わせフォーム</span></label>
+                        <label class="option-control"><input type="checkbox" name="features" value="LINE連携"><span class="option-text">LINE連携</span></label>
+                        <label class="option-control"><input type="checkbox" name="features" value="SNS連携"><span class="option-text">SNS連携</span></label>
+                        <label class="option-control"><input type="checkbox" name="features" value="お知らせ機能"><span class="option-text">お知らせ機能</span></label>
+                        <label class="option-control"><input type="checkbox" name="features" value="Googleマップ"><span class="option-text">Googleマップ</span></label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ⑦ プラン選択 -->
+            <section class="card" data-section="7">
+                <h2 class="card-title">⑦ プラン選択</h2>
+                <div class="form-group">
+                    <label class="form-label">希望するプラン<span class="required-badge">必須</span></label>
+                    <div class="options-grid cols-3">
+                        <label class="option-control">
+                            <input type="radio" name="plan" value="ライトプラン" required>
+                            <span class="option-text">ライトプラン</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="plan" value="スタンダードプラン">
+                            <span class="option-text">スタンダードプラン</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="plan" value="カスタムプラン">
+                            <span class="option-text">カスタムプラン</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ⑧ ドメイン・サーバー -->
+            <section class="card" data-section="8">
+                <h2 class="card-title">⑧ ドメイン・サーバー</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">独自ドメイン新規取得</label>
+                    <div class="options-grid cols-2">
+                        <label class="option-control">
+                            <input type="radio" name="domain_new" value="希望する">
+                            <span class="option-text">希望する</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="domain_new" value="希望しない">
+                            <span class="option-text">希望しない</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">現在利用中のドメイン</label>
+                    <div class="options-grid cols-2">
+                        <label class="option-control">
+                            <input type="radio" name="domain_current" value="あり" id="domain_current_yes">
+                            <span class="option-text">あり</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="domain_current" value="なし">
+                            <span class="option-text">なし</span>
+                        </label>
+                    </div>
+                    
+                    <!-- 条件付きドメイン入力欄 -->
+                    <div class="conditional-field" id="domain_current_container">
+                        <label class="form-label" for="domain_name">利用中のドメイン名をご記入ください</label>
+                        <input type="text" id="domain_name" name="domain_name" placeholder="example.com">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ⑨ 素材提供 -->
+            <section class="card" data-section="9">
+                <h2 class="card-title">⑨ 素材提供</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">ロゴ素材の有無</label>
+                    <div class="options-grid cols-2">
+                        <label class="option-control">
+                            <input type="radio" name="material_logo" value="あり">
+                            <span class="option-text">あり</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="material_logo" value="なし">
+                            <span class="option-text">なし</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">写真素材の有無</label>
+                    <div class="options-grid cols-2">
+                        <label class="option-control">
+                            <input type="radio" name="material_photo" value="あり">
+                            <span class="option-text">あり</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="material_photo" value="なし">
+                            <span class="option-text">なし</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">文章素材の有無</label>
+                    <div class="options-grid cols-2">
+                        <label class="option-control">
+                            <input type="radio" name="material_text" value="あり">
+                            <span class="option-text">あり</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="material_text" value="なし">
+                            <span class="option-text">なし</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ⑩ サイト制作の最終目的 -->
+            <section class="card" data-section="10">
+                <h2 class="card-title">⑩ サイト制作の最終目的</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">制作の最終的なゴール（いずれか1つを選択）<span class="required-badge">必須</span></label>
+                    <div class="options-grid cols-2">
+                        <label class="option-control">
+                            <input type="radio" name="final_goal" value="とりあえずホームページを作りたい" required>
+                            <span class="option-text">とりあえずホームページを作りたい</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="final_goal" value="集客">
+                            <span class="option-text">集客</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="final_goal" value="商品案内">
+                            <span class="option-text">商品案内</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="final_goal" value="求人">
+                            <span class="option-text">求人</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="final_goal" value="その他" id="final_goal_other_radio">
+                            <span class="option-text">その他</span>
+                        </label>
+                    </div>
+                    
+                    <!-- 条件付き入力欄 -->
+                    <div class="conditional-field" id="final_goal_other_container">
+                        <label class="form-label" for="final_goal_other_text">具体的な目的をご記入ください</label>
+                        <input type="text" id="final_goal_other_text" name="final_goal_other_text" placeholder="例：〇〇の販売促進など">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="search_keywords">検索キーワード（ユーザーに検索してほしいワード）</label>
+                    <textarea id="search_keywords" name="search_keywords" placeholder="例：地域名 + カフェ、〇〇市 工務店 など"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">閲覧環境の重視度 <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted); margin-left: 0.5rem;">※スマホ重視がおすすめ！</span></label>
+                    <div class="options-grid cols-2">
+                        <label class="option-control">
+                            <input type="radio" name="device_priority" value="スマホ重視">
+                            <span class="option-text">スマホ重視</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="device_priority" value="PC重視">
+                            <span class="option-text">PC重視</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ⑪ 競合サイト -->
+            <section class="card" data-section="11">
+                <h2 class="card-title">⑪ 競合サイト</h2>
+                
+                <div class="form-group">
+                    <label class="form-label" for="competitor_name">同業他社で参考になるサイト名</label>
+                    <textarea id="competitor_name" name="competitor_name" placeholder="競合サイト名や会社名をご記入ください（複数可）。"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="competitor_url">競合サイトURL</label>
+                    <textarea id="competitor_url" name="competitor_url" placeholder="競合他社のホームページURLがあればご記入ください（複数可）。"></textarea>
+                </div>
+            </section>
+
+            <!-- ⑫ 希望納期 -->
+            <section class="card" data-section="12">
+                <h2 class="card-title">⑫ 希望納期</h2>
+                <div class="form-group">
+                    <label class="form-label">希望納期（いずれか1つを選択）<span class="required-badge">必須</span></label>
+                    <div class="options-grid cols-2">
+                        <label class="option-control">
+                            <input type="radio" name="deadline" value="お急ぎ" required>
+                            <span class="option-text">お急ぎ</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="deadline" value="1ヶ月以内">
+                            <span class="option-text">1ヶ月以内</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="deadline" value="2ヶ月以内">
+                            <span class="option-text">2ヶ月以内</span>
+                        </label>
+                        <label class="option-control">
+                            <input type="radio" name="deadline" value="特に希望なし">
+                            <span class="option-text">特に希望なし</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ⑬ 利用中SNS -->
+            <section class="card" data-section="13">
+                <h2 class="card-title">⑬ 利用中SNS</h2>
+                <div class="form-group">
+                    <label class="form-label">現在利用中のSNS（複数選択可）</label>
+                    <div class="options-grid cols-3">
+                        <label class="option-control"><input type="checkbox" name="sns" value="LINE"><span class="option-text">LINE</span></label>
+                        <label class="option-control"><input type="checkbox" name="sns" value="Instagram"><span class="option-text">Instagram</span></label>
+                        <label class="option-control"><input type="checkbox" name="sns" value="Facebook"><span class="option-text">Facebook</span></label>
+                        <label class="option-control"><input type="checkbox" name="sns" value="X"><span class="option-text">X</span></label>
+                        <label class="option-control"><input type="checkbox" name="sns" value="TikTok"><span class="option-text">TikTok</span></label>
+                        <label class="option-control"><input type="checkbox" name="sns" value="YouTube"><span class="option-text">YouTube</span></label>
+                    </div>
+                </div>
+            </section>
+
+            <div class="btn-container">
+                <button type="submit" class="btn-submit" id="submitBtn">回答を送信する</button>
+            </div>
+        </form>
+
+        <div id="successMessage" class="card success-message-wrapper" style="display: none;">
+            <div class="success-icon">✓</div>
+            <h2 class="success-title">送信完了</h2>
+            <p>ヒアリング内容を送信しました。ありがとうございました。</p>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>送信中です。しばらくお待ちください...</p>
+    </div>
+
+    <script src="./app.js"></script>
+</body>
+</html>
