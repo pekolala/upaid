@@ -42,7 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleConditionalFields();
         updateProgress();
     });
+];
 
+    
     // Checkbox/Radio Option Highlight helper
     function updateActiveOptionControls() {
         const controls = document.querySelectorAll(".option-control");
