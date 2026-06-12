@@ -169,68 +169,124 @@
 
     <!-- 選ばれる理由 Section -->
     <section id="reasons" class="py-20 px-4 bg-stone-50">
-        <div class="max-w-5xl mx-auto">
+        <div class="max-w-3xl mx-auto">
             <div class="text-center mb-16">
                 <span class="text-sm font-bold text-brand-600 tracking-wider uppercase">WHY UP AID</span>
                 <h2 class="text-3xl font-bold mt-2 text-stone-850">選ばれる理由</h2>
                 <div class="w-12 h-1 bg-brand-500 mx-auto mt-4 rounded-full"></div>
-                <p class="text-stone-600 mt-4 max-w-xl mx-auto">サーバーやドメイン設定などの専門知識が必要な面倒ごとは、すべてこちらで引き受けます。</p>
             </div>
 
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Reason 1 -->
-                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition">
-                    <div class="text-brand-600 text-3xl mb-4 font-bold">💬</div>
-                    <h3 class="font-bold text-stone-850 text-lg mb-2">LINEで簡単に修正依頼</h3>
-                    <p class="text-sm text-stone-600 leading-relaxed">
-                        「お知らせを載せたい」「定休日を変えたい」など、後からの変更もLINEから写真やテキストを送るだけで簡単に完了します。難しいシステム管理は不要です。
-                    </p>
-                </div>
+            <div class="space-y-4">
+                <!-- Accordion 1 -->
+                <details class="group bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center p-6 cursor-pointer focus:outline-none">
+                        <div class="flex items-center gap-3">
+                            <span class="text-brand-600 font-extrabold text-xl">✅</span>
+                            <h3 class="text-lg font-bold text-stone-850">パソコンが苦手でも安心</h3>
+                        </div>
+                        <span class="text-sm font-bold text-brand-600 flex items-center gap-1 group-open:hidden">
+                            詳細はこちら <span class="transition-transform group-open:rotate-90">→</span>
+                        </span>
+                        <span class="text-sm font-bold text-stone-400 hidden group-open:flex items-center gap-1">
+                            閉じる <span>↑</span>
+                        </span>
+                    </summary>
+                    <div class="px-6 pb-6 pt-2 border-t border-stone-100 bg-stone-50/50">
+                        <p class="text-stone-600 text-sm leading-relaxed">
+                            「ホームページを作りたいけど、何から始めればいいかわからない」<br>
+                            そんな方でも大丈夫です。<br>
+                            専門用語をできるだけ使わず、わかりやすくご説明しながら進めますので、初めての方でも安心してご依頼いただけます。
+                        </p>
+                    </div>
+                </details>
 
-                <!-- Reason 2 -->
-                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition">
-                    <div class="text-brand-600 text-3xl mb-4 font-bold">⚡</div>
-                    <h3 class="font-bold text-stone-850 text-lg mb-2">迅速な更新代行</h3>
-                    <p class="text-sm text-stone-600 leading-relaxed">
-                        「営業時間変更」「画像差し替え」「新メニューの追加」などの軽微な修正は、月額サポート費用内でスピーディーに対応。サイトをいつも最新に保てます。
-                    </p>
-                </div>
+                <!-- Accordion 2 -->
+                <details class="group bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center p-6 cursor-pointer focus:outline-none">
+                        <div class="flex items-center gap-3">
+                            <span class="text-brand-600 font-extrabold text-xl">✅</span>
+                            <h3 class="text-lg font-bold text-stone-850">必要な機能だけだから低価格</h3>
+                        </div>
+                        <span class="text-sm font-bold text-brand-600 flex items-center gap-1 group-open:hidden">
+                            詳細はこちら <span class="transition-transform group-open:rotate-90">→</span>
+                        </span>
+                        <span class="text-sm font-bold text-stone-400 hidden group-open:flex items-center gap-1">
+                            閉じる <span>↑</span>
+                        </span>
+                    </summary>
+                    <div class="px-6 pb-6 pt-2 border-t border-stone-100 bg-stone-50/50">
+                        <p class="text-stone-600 text-sm leading-relaxed">
+                            豪華な機能をたくさん付けるのではなく、お客様に本当に必要な内容に絞って制作します。<br>
+                            そのため、無駄な費用を抑えながら、見やすく使いやすいホームページをご提供できます。
+                        </p>
+                    </div>
+                </details>
 
-                <!-- Reason 3 -->
-                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition">
-                    <div class="text-brand-600 text-3xl mb-4 font-bold">📱</div>
-                    <h3 class="font-bold text-stone-850 text-lg mb-2">スマホ完全対応</h3>
-                    <p class="text-sm text-stone-600 leading-relaxed">
-                        スマートフォン、タブレット、パソコン、すべての画面幅に美しく自動調整される「レスポンシブデザイン」を標準で実装いたします。
-                    </p>
-                </div>
+                <!-- Accordion 3 -->
+                <details class="group bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center p-6 cursor-pointer focus:outline-none">
+                        <div class="flex items-center gap-3">
+                            <span class="text-brand-600 font-extrabold text-xl">✅</span>
+                            <h3 class="text-lg font-bold text-stone-850">スマホ対応込みで制作</h3>
+                        </div>
+                        <span class="text-sm font-bold text-brand-600 flex items-center gap-1 group-open:hidden">
+                            詳細はこちら <span class="transition-transform group-open:rotate-90">→</span>
+                        </span>
+                        <span class="text-sm font-bold text-stone-400 hidden group-open:flex items-center gap-1">
+                            閉じる <span>↑</span>
+                        </span>
+                    </summary>
+                    <div class="px-6 pb-6 pt-2 border-t border-stone-100 bg-stone-50/50">
+                        <p class="text-stone-600 text-sm leading-relaxed">
+                            現在、多くの方がスマートフォンからホームページを閲覧しています。<br>
+                            スマホ・タブレット・パソコンのどの端末でも見やすいホームページを制作いたします。
+                        </p>
+                    </div>
+                </details>
 
-                <!-- Reason 4 -->
-                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition">
-                    <div class="text-brand-600 text-3xl mb-4 font-bold">📸</div>
-                    <h3 class="font-bold text-stone-850 text-lg mb-2">写真掲載サポート</h3>
-                    <p class="text-sm text-stone-600 leading-relaxed">
-                        スマホで撮った店舗やサービスの写真でも、こちらで最適な明るさや切り抜きに調整して掲載。写真のご用意が難しくても丁寧にお手伝いします。
-                    </p>
-                </div>
+                <!-- Accordion 4 -->
+                <details class="group bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center p-6 cursor-pointer focus:outline-none">
+                        <div class="flex items-center gap-3">
+                            <span class="text-brand-600 font-extrabold text-xl">✅</span>
+                            <h3 class="text-lg font-bold text-stone-850">面倒な作業はおまかせ</h3>
+                        </div>
+                        <span class="text-sm font-bold text-brand-600 flex items-center gap-1 group-open:hidden">
+                            詳細はこちら <span class="transition-transform group-open:rotate-90">→</span>
+                        </span>
+                        <span class="text-sm font-bold text-stone-400 hidden group-open:flex items-center gap-1">
+                            閉じる <span>↑</span>
+                        </span>
+                    </summary>
+                    <div class="px-6 pb-6 pt-2 border-t border-stone-100 bg-stone-50/50">
+                        <p class="text-stone-600 text-sm leading-relaxed">
+                            掲載内容のご相談や文章作成のお手伝いも行いますので、忙しい方でもスムーズにホームページを公開できます。<br>
+                            文字入力が苦手な方は書きたい内容を紙に書いて写真を撮り、LINEまたはメールで送っていただくだけでも作成可能です。
+                        </p>
+                    </div>
+                </details>
 
-                <!-- Reason 5 -->
-                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition">
-                    <div class="text-brand-600 text-3xl mb-4 font-bold">🌐</div>
-                    <h3 class="font-bold text-stone-850 text-lg mb-2">サーバー・ドメイン管理</h3>
-                    <p class="text-sm text-stone-600 leading-relaxed">
-                        面倒でわかりにくいサーバーの契約、ドメイン（.comや.jpなど）の取得、SSLセキュリティ設定もすべて代行します。安心してお任せください。
-                    </p>
-                </div>
-
-                <!-- Reason 6 -->
-                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition">
-                    <div class="text-brand-600 text-3xl mb-4 font-bold">🚀</div>
-                    <h3 class="font-bold text-stone-850 text-lg mb-2">基本のSEO・マップ連携</h3>
-                    <p class="text-sm text-stone-600 leading-relaxed">
-                        地元のお客さんに検索されやすくなるための基本SEO設定や、店舗へのルートを案内できるGoogleマップ埋め込みもプランに標準装備しています。
-                    </p>
-                </div>
+                <!-- Accordion 5 -->
+                <details class="group bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center p-6 cursor-pointer focus:outline-none">
+                        <div class="flex items-center gap-3">
+                            <span class="text-brand-600 font-extrabold text-xl">✅</span>
+                            <h3 class="text-lg font-bold text-stone-850">公開後も気軽に相談、修正OK</h3>
+                        </div>
+                        <span class="text-sm font-bold text-brand-600 flex items-center gap-1 group-open:hidden">
+                            詳細はこちら <span class="transition-transform group-open:rotate-90">→</span>
+                        </span>
+                        <span class="text-sm font-bold text-stone-400 hidden group-open:flex items-center gap-1">
+                            閉じる <span>↑</span>
+                        </span>
+                    </summary>
+                    <div class="px-6 pb-6 pt-2 border-t border-stone-100 bg-stone-50/50">
+                        <p class="text-stone-600 text-sm leading-relaxed">
+                            ホームページは作って終わりではありません。<br>
+                            公開後のご質問や運用のご相談、修正など、困ったときに気軽に相談できるサポート体制をご用意しています。
+                        </p>
+                    </div>
+                </details>
             </div>
         </div>
     </section>
