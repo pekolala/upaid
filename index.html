@@ -60,6 +60,14 @@
             background-color: #fafaf9;
             scroll-behavior: smooth;
         }
+        /* スクロールバーの非表示化 */
+        #nav-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+        #nav-scroll-container {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -76,17 +84,31 @@
                         </div>
                     </a>
                 </div>
-                <nav class="hidden md:flex items-center space-x-1.5 lg:space-x-3 xl:space-x-4 text-[11px] lg:text-[13px] xl:text-sm whitespace-nowrap">
-                    <a href="#problems" class="text-stone-600 hover:text-brand-600 font-medium transition">よくあるお悩み</a>
-                    <a href="#reasons" class="text-stone-600 hover:text-brand-600 font-medium transition">選ばれる理由</a>
-                    <a href="#works" class="text-stone-600 hover:text-brand-600 font-medium transition">制作実績</a>
-                    <a href="#voices" class="text-stone-600 hover:text-brand-600 font-medium transition">お客様の声</a>
-                    <a href="#pricing" class="text-stone-600 hover:text-brand-600 font-medium transition">料金プラン</a>
-                    <a href="#flow" class="text-stone-600 hover:text-brand-600 font-medium transition">制作の流れ</a>
-                    <a href="#faq" class="text-stone-600 hover:text-brand-600 font-medium transition">よくある質問</a>
-                    <a href="#profile" class="text-stone-600 hover:text-brand-600 font-medium transition">プロフィール</a>
-                    <a href="#contact" class="text-stone-600 hover:text-brand-600 font-medium transition">お問い合わせ</a>
-                </nav>
+                <!-- Scrollable Navigation Container -->
+                <div class="hidden md:flex items-center relative max-w-[320px] lg:max-w-[450px] xl:max-w-[620px] 2xl:max-w-none px-6">
+                    <!-- Left Scroll Button -->
+                    <button onclick="scrollMenu(-100)" class="absolute left-0 z-10 p-1 text-stone-400 hover:text-brand-600 bg-white/90 rounded-full shadow-sm border border-stone-200 focus:outline-none select-none cursor-pointer flex items-center justify-center w-5 h-5 text-[10px]">
+                        ◀
+                    </button>
+                    
+                    <!-- Navigation Menu -->
+                    <nav id="nav-scroll-container" class="overflow-x-auto flex items-center space-x-3.5 lg:space-x-5 text-[11px] lg:text-[13px] xl:text-sm whitespace-nowrap scroll-smooth py-1">
+                        <a href="#problems" class="text-stone-600 hover:text-brand-600 font-medium transition">よくあるお悩み</a>
+                        <a href="#reasons" class="text-stone-600 hover:text-brand-600 font-medium transition">選ばれる理由</a>
+                        <a href="#works" class="text-stone-600 hover:text-brand-600 font-medium transition">制作実績</a>
+                        <a href="#voices" class="text-stone-600 hover:text-brand-600 font-medium transition">お客様の声</a>
+                        <a href="#pricing" class="text-stone-600 hover:text-brand-600 font-medium transition">料金プラン</a>
+                        <a href="#flow" class="text-stone-600 hover:text-brand-600 font-medium transition">制作の流れ</a>
+                        <a href="#faq" class="text-stone-600 hover:text-brand-600 font-medium transition">よくある質問</a>
+                        <a href="#profile" class="text-stone-600 hover:text-brand-600 font-medium transition">プロフィール</a>
+                        <a href="#contact" class="text-stone-600 hover:text-brand-600 font-medium transition">お問い合わせ</a>
+                    </nav>
+                    
+                    <!-- Right Scroll Button -->
+                    <button onclick="scrollMenu(100)" class="absolute right-0 z-10 p-1 text-stone-400 hover:text-brand-600 bg-white/90 rounded-full shadow-sm border border-stone-200 focus:outline-none select-none cursor-pointer flex items-center justify-center w-5 h-5 text-[10px]">
+                        ▶
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -1213,6 +1235,14 @@
                 setTimeout(() => {
                     wrapper.classList.add('hidden');
                 }, 500); // transition時間と同じ秒数待つ
+            }
+        }
+
+        // メニューの左右スクロール制御
+        function scrollMenu(amount) {
+            const container = document.getElementById('nav-scroll-container');
+            if (container) {
+                container.scrollBy({ left: amount, behavior: 'smooth' });
             }
         }
     </script>
