@@ -858,10 +858,18 @@
                     </svg>
                     LINEで気軽に相談（無料）
                 </a>
+                
+                <!-- Email Button -->
+                <button onclick="toggleContactForm()" class="w-full sm:w-auto inline-flex items-center justify-center bg-stone-800 hover:bg-stone-900 text-white px-10 py-5 rounded-2xl font-bold shadow-xl shadow-stone-800/10 hover:shadow-stone-850/20 transition transform hover:-translate-y-0.5 text-lg cursor-pointer">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                     お問い合わせフォーム
+                </button>
             </div>
 
-            <!-- Contact Form UI -->
-            <div id="contact-form-wrapper" class="max-w-2xl mx-auto bg-stone-50 border border-stone-200 rounded-3xl p-6 sm:p-10 shadow-sm text-left">
+            <!-- Toggle Contact Form UI -->
+            <div id="contact-form-wrapper" class="max-w-2xl mx-auto bg-stone-50 border border-stone-200 rounded-3xl p-6 sm:p-10 shadow-sm hidden text-left transition-all duration-500 ease-in-out transform opacity-0 scale-95">
                 <h3 class="text-2xl font-bold text-stone-850 mb-2 text-center">お問い合わせフォーム</h3>
                 <p class="text-stone-600 mb-8 text-center text-sm leading-relaxed">
                     「ホームページを作りたいけど何から始めればいいか分からない」 「費用について相談したい」<br>
@@ -882,7 +890,7 @@
                     </div>
                     <div class="pt-4">
                         <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 px-6 rounded-2xl shadow-lg transition duration-300 flex items-center justify-center gap-2 cursor-pointer text-lg">
-                            <span>無料相談する</span>
+                            <span>無料相談する（送信）</span>
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                             </svg>
@@ -1037,7 +1045,28 @@
             `;
             container.insertAdjacentHTML('beforeend', sectionHtml);
         }
-
+        // お問い合わせフォームの開閉切り替え
+        function toggleContactForm() {
+            const wrapper = document.getElementById('contact-form-wrapper');
+            if (wrapper.classList.contains('hidden')) {
+                // 表示する
+                wrapper.classList.remove('hidden');
+                // 少し遅らせてアニメーションを実行（transitionを効かせるため）
+                setTimeout(() => {
+                    wrapper.classList.remove('opacity-0', 'scale-95');
+                    wrapper.classList.add('opacity-100', 'scale-100');
+                    // フォーム位置までスムーズにスクロール
+                    wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 50);
+            } else {
+                // 非表示にする
+                wrapper.classList.remove('opacity-100', 'scale-100');
+                wrapper.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    wrapper.classList.add('hidden');
+                }, 500); // transition時間と同じ秒数待つ
+            }
+        }
     </script>
 
 </body>
