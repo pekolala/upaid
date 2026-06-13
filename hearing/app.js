@@ -78,6 +78,15 @@ document.addEventListener("DOMContentLoaded", () => {
             vibeOtherContainer.classList.remove("show");
         }
 
+        // Color Other
+        const colorOtherCheckbox = document.getElementById("color_other_checkbox");
+        const colorOtherContainer = document.getElementById("color_other_container");
+        if (colorOtherCheckbox && colorOtherCheckbox.checked) {
+            colorOtherContainer.classList.add("show");
+        } else {
+            colorOtherContainer.classList.remove("show");
+        }
+
         // Current Domain Yes
         const domainCurrentYes = document.getElementById("domain_current_yes");
         const domainCurrentContainer = document.getElementById("domain_current_container");
@@ -276,6 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
             target_region: formData.get("target_region") || "",
             design_hope: formData.get("design_hope") || "",
             design_colors: formData.getAll("design_color").join(", "),
+            design_color_other: formData.get("color_other_text") || "",
             design_vibes: formData.getAll("design_vibe").join(", "),
             design_vibe_other: formData.get("vibe_other_text") || "",
             reference_site_name: formData.get("reference_site_name") || "",
