@@ -1,5 +1,5 @@
 // GAS Web App URL Placeholder
-const GAS_URL = "ここにGASのWebアプリURLを設定";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxMTOcHbUYwb3Q9ZtgHGd9rwnGv1CpIf1LT_0tCXy0ef3-l58WQvJoqBqyniiuDYUyAJg/exec";
 
 // LocalStorage Key
 const STORAGE_KEY = "upaid_hearing_form_draft";
