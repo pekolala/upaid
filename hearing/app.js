@@ -357,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (error) {
             console.error(error);
-            alert("送信中にエラーが発生しました。インターネット接続を確認して再度お試しいただくか、担当者まで直接ご連絡ください。");
+            alert("送信中にエラーが発生しました。\nエラー内容: " + error.name + ": " + error.message + "\n\nインターネット接続を確認して再度お試しいただくか、担当者まで直接ご連絡ください。");
         } finally {
             loadingOverlay.classList.remove("show");
             submitBtn.disabled = false;
