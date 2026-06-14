@@ -342,18 +342,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("Simulating GAS submission. Payload:", payload);
                 await new Promise(resolve => setTimeout(resolve, 1500));
             } else {
-                const response = await fetch(GAS_URL, {
+                await fetch(GAS_URL, {
                     method: "POST",
-                    mode: "cors",
+                    mode: "no-cors",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify(payload)
                 });
-
-                if (!response.ok) {
-                    throw new Error("サーバーエラーが発生しました。");
-                }
             }
 
             // Success Handing
