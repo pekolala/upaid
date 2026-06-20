@@ -158,6 +158,33 @@
         </div>
     </section>
 
+    <!-- お知らせ Section -->
+    <section id="news" class="py-10 px-4 bg-stone-50 border-b border-stone-100">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-stone-100">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 pb-4 border-b border-stone-100">
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm font-bold text-brand-600 tracking-wider uppercase">NEWS</span>
+                        <h2 class="text-xl font-bold text-stone-850">お知らせ</h2>
+                    </div>
+                    <span class="text-xs text-stone-400 mt-1 md:mt-0">スプレッドシートから自動更新</span>
+                </div>
+                
+                <!-- お知らせリスト -->
+                <div id="news-list" class="space-y-4">
+                    <!-- ローディング状態 -->
+                    <div id="news-loading" class="text-center py-4 text-stone-400 text-sm flex items-center justify-center gap-2">
+                        <svg class="animate-spin h-5 w-5 text-brand-500" viewBox="0 0 24 24" fill="none">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        お知らせを読み込んでいます...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- こんなお悩みありませんか？ Section -->
     <section id="problems" class="py-20 px-4 bg-white border-y border-stone-100">
         <div class="max-w-4xl mx-auto">
@@ -1306,6 +1333,93 @@
                 submitButtonIcon.classList.remove('animate-pulse');
             }
         });
+
+        // お知らせ読み込み制御（Google Apps Script連携）
+        const GAS_NEWS_API_URL = ""; // ここにスプレッドシートからデータを出力するGASのウェブアプリURLを貼り付けます
+
+        const demoNews = [
+            { date: "2026/06/20", category: "お知らせ", title: "ホームページにお知らせ枠を追加しました。スプレッドシートを接続すると、ここに自動で反映されます。" },
+            { date: "2026/06/15", category: "重要", title: "【デモデータ】臨時休業日のお知らせ（GAS連携後に実際の内容に変わります）" }
+        ];
+
+        async function loadNews() {
+            const newsListContainer = document.getElementById('news-list');
+            if (!newsListContainer) return;
+
+            // GAS_NEWS_API_URL が設定されていない場合はデモデータを表示
+            if (!GAS_NEWS_API_URL) {
+                renderNews(demoNews);
+                return;
+            }
+
+            try {
+                const response = await fetch(GAS_NEWS_API_URL);
+                if (!response.ok) throw new Error("Network response was not ok");
+                const data = await response.json();
+                renderNews(data);
+            } catch (error) {
+                console.error("Failed to load news:", error);
+                // エラー時はデモデータでフォールバック
+                renderNews([
+                    { date: "エラー", category: "システム", title: "お知らせの読み込みに失敗しました。URLまたはアクセス権限を確認してください。" },
+                    ...demoNews
+                ]);
+            }
+        }
+
+        function renderNews(newsItems) {
+            const newsListContainer = document.getElementById('news-list');
+            if (!newsListContainer) return;
+            
+            // ローディング消去
+            newsListContainer.innerHTML = "";
+
+            if (newsItems.length === 0) {
+                newsListContainer.innerHTML = `<p class="text-sm text-stone-500 py-2">現在お知らせはありません。</p>`;
+                return;
+            }
+
+            newsItems.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = "flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4 py-3 border-b border-stone-100 last:border-0 hover:bg-stone-50/50 px-2 rounded-lg transition";
+
+                // カテゴリに応じたバッジ色
+                let badgeClass = "bg-stone-100 text-stone-600";
+                if (item.category === "重要") {
+                    badgeClass = "bg-red-50 text-red-600 border border-red-100";
+                } else if (item.category === "お知らせ") {
+                    badgeClass = "bg-brand-50 text-brand-700 border border-brand-100";
+                }
+
+                // タイトル部分がリンクである場合（詳細URLがある場合）
+                let titleHtml = `<span class="text-stone-700 font-medium text-sm sm:text-base">${escapeHtml(item.title)}</span>`;
+                if (item.url) {
+                    titleHtml = `<a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="text-stone-700 hover:text-brand-600 font-medium text-sm sm:text-base flex items-center gap-1 hover:underline">
+                        ${escapeHtml(item.title)}
+                        <svg class="w-3.5 h-3.5 inline-block text-stone-400 fill-none stroke-currentColor viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                    </a>`;
+                }
+
+                itemDiv.innerHTML = `
+                    <span class="text-xs sm:text-sm text-stone-400 font-mono flex-shrink-0">${escapeHtml(item.date)}</span>
+                    <span class="px-2.5 py-0.5 rounded text-[11px] font-bold inline-block text-center flex-shrink-0 w-16 ${badgeClass}">${escapeHtml(item.category)}</span>
+                    <div class="flex-grow min-w-0">
+                        ${titleHtml}
+                    </div>
+                `;
+                newsListContainer.appendChild(itemDiv);
+            });
+        }
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        // ページロード時に読み込み開始
+        window.addEventListener('DOMContentLoaded', loadNews);
     </script>
 
 </body>
