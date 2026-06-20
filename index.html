@@ -1336,8 +1336,7 @@
         const GAS_NEWS_API_URL = "https://script.google.com/macros/s/AKfycbzcoVs7JR8XvwIZEzsSoz9f3Smpc9L2pq1fsqijQTrAKOj7kKzXjK3-zqDiJs3_RaKc/exec"; // ここにスプレッドシートからデータを出力するGASのウェブアプリURLを貼り付けます
 
         const demoNews = [
-            { date: "2026/06/20", category: "お知らせ", title: "ホームページにお知らせ枠を追加しました。スプレッドシートを接続すると、ここに自動で反映されます。" },
-            { date: "2026/06/15", category: "重要", title: "【デモデータ】臨時休業日のお知らせ（GAS連携後に実際の内容に変わります）" }
+            { date: "2026/06/20", category: "お知らせ", title: "お知らせ機能が追加されました。スプレッドシートにお知らせを追加してください。", url: "ここにスプレッドシートの4列目（内容）に入力したテキストが表示されます。長文の掲載や、詳細な案内をアコーディオン形式でスマートに折りたたんで表示することが可能です。" }
         ];
 
         async function loadNews() {
@@ -1388,25 +1387,62 @@
                 badgeClass = "bg-brand-50 text-brand-700 border border-brand-100";
             }
 
-            // タイトル部分がリンクである場合（詳細URLがある場合）
-            let titleHtml = `<span class="text-stone-700 font-medium">${escapeHtml(item.title)}</span>`;
-            if (item.url) {
-                titleHtml = `<a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="text-stone-700 hover:text-brand-600 font-medium hover:underline inline-flex items-center gap-1">
-                    ${escapeHtml(item.title)}
-                    <svg class="w-3.5 h-3.5 inline-block text-stone-400 fill-none stroke-currentColor viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                </a>`;
+            // 内容（スプレッドシートの4列目。GASのレスポンスではurlプロパティに入っています）
+            const hasContent = item.url && item.url.trim() !== "";
+
+            // タイトルと展開用パーツの作成
+            let titleHtml = "";
+            let accordionHtml = "";
+
+            if (hasContent) {
+                // アコーディオン展開用ボタン（クリックで開閉）
+                titleHtml = `
+                    <button onclick="toggleNewsAccordion()" class="text-stone-700 hover:text-brand-600 font-medium text-left flex items-center gap-1.5 focus:outline-none w-full group cursor-pointer">
+                        <span class="truncate">${escapeHtml(item.title)}</span>
+                        <svg id="news-arrow" class="w-4 h-4 text-stone-400 group-hover:text-brand-500 transition-transform duration-200 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                `;
+                // アコーディオンで表示する本文
+                accordionHtml = `
+                    <div id="news-accordion" class="hidden mt-2 pt-2 border-t border-stone-100/70 text-stone-600 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">
+                        ${escapeHtml(item.url)}
+                    </div>
+                `;
+            } else {
+                titleHtml = `<span class="text-stone-700 font-medium">${escapeHtml(item.title)}</span>`;
             }
 
-            // 1件分のHTMLを出力 (1行で綺麗に見えるように)
+            // 出力
             newsListContainer.innerHTML = `
-                <div class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 text-xs sm:text-sm">
-                    <span class="text-stone-400 font-mono flex-shrink-0">${escapeHtml(item.date)}</span>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-bold inline-block text-center flex-shrink-0 ${badgeClass}">${escapeHtml(item.category)}</span>
-                    <div class="min-w-0 truncate">
+                <div class="flex flex-col sm:flex-row sm:items-start gap-1.5 sm:gap-3 text-xs sm:text-sm w-full">
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <span class="text-stone-400 font-mono">${escapeHtml(item.date)}</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold inline-block text-center ${badgeClass}">${escapeHtml(item.category)}</span>
+                    </div>
+                    <div class="min-w-0 flex-grow">
                         ${titleHtml}
+                        ${accordionHtml}
                     </div>
                 </div>
             `;
+        }
+
+        // アコーディオンの開閉制御
+        function toggleNewsAccordion() {
+            const accordion = document.getElementById('news-accordion');
+            const arrow = document.getElementById('news-arrow');
+            if (accordion && arrow) {
+                const isHidden = accordion.classList.contains('hidden');
+                if (isHidden) {
+                    accordion.classList.remove('hidden');
+                    arrow.classList.add('rotate-180');
+                } else {
+                    accordion.classList.add('hidden');
+                    arrow.classList.remove('rotate-180');
+                }
+            }
         }
 
         function escapeHtml(str) {
