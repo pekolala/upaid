@@ -54,6 +54,10 @@
         }
     </script>
     <style>
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
         body {
             font-family: 'Noto Sans JP', sans-serif;
             color: #292524;
@@ -1506,7 +1510,7 @@
                 `;
                 // アコーディオンで表示する本文
                 accordionHtml = `
-                    <div id="news-accordion" class="hidden mt-2 pt-2 border-t border-stone-100/70 text-stone-600 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">
+                    <div id="news-accordion" class="hidden mt-2 pt-2 border-t border-stone-100/70 text-stone-600 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap break-words">
                         ${escapeHtml(item.url)}
                     </div>
                 `;
