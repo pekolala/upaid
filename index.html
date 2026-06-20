@@ -159,28 +159,26 @@
     </section>
 
     <!-- お知らせ Section -->
-    <section id="news" class="py-10 px-4 bg-stone-50 border-b border-stone-100">
+    <section id="news" class="py-3 px-4 bg-stone-50 border-b border-stone-100">
         <div class="max-w-4xl mx-auto">
-            <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-stone-100">
-                <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 pb-4 border-b border-stone-100">
-                    <div class="flex items-center gap-3">
-                        <span class="text-sm font-bold text-brand-600 tracking-wider uppercase">NEWS</span>
-                        <h2 class="text-xl font-bold text-stone-850">お知らせ</h2>
-                    </div>
-                    <span class="text-xs text-stone-400 mt-1 md:mt-0">スプレッドシートから自動更新</span>
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm">
+                <!-- ラベル -->
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <span class="text-xs font-bold text-brand-600 tracking-wider uppercase bg-brand-50 px-2 py-0.5 rounded border border-brand-100">NEWS</span>
+                    <span class="text-xs text-stone-400 sm:hidden">スプレッドシートから自動更新</span>
                 </div>
-                
-                <!-- お知らせリスト -->
-                <div id="news-list" class="space-y-4">
+                <!-- お知らせ表示領域 -->
+                <div id="news-list" class="flex-grow min-w-0">
                     <!-- ローディング状態 -->
-                    <div id="news-loading" class="text-center py-4 text-stone-400 text-sm flex items-center justify-center gap-2">
-                        <svg class="animate-spin h-5 w-5 text-brand-500" viewBox="0 0 24 24" fill="none">
+                    <span id="news-loading" class="text-stone-400 text-xs flex items-center gap-1.5 py-1">
+                        <svg class="animate-spin h-3.5 w-3.5 text-brand-500" viewBox="0 0 24 24" fill="none">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        お知らせを読み込んでいます...
-                    </div>
+                        読み込み中...
+                    </span>
                 </div>
+                <span class="text-xs text-stone-400 hidden sm:inline flex-shrink-0">スプレッドシートから自動更新</span>
             </div>
         </div>
     </section>
@@ -1375,40 +1373,40 @@
             newsListContainer.innerHTML = "";
 
             if (newsItems.length === 0) {
-                newsListContainer.innerHTML = `<p class="text-sm text-stone-500 py-2">現在お知らせはありません。</p>`;
+                newsListContainer.innerHTML = `<span class="text-stone-500">現在お知らせはありません。</span>`;
                 return;
             }
 
-            newsItems.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = "flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4 py-3 border-b border-stone-100 last:border-0 hover:bg-stone-50/50 px-2 rounded-lg transition";
+            // 最新の1件のみ取得
+            const item = newsItems[0];
 
-                // カテゴリに応じたバッジ色
-                let badgeClass = "bg-stone-100 text-stone-600";
-                if (item.category === "重要") {
-                    badgeClass = "bg-red-50 text-red-600 border border-red-100";
-                } else if (item.category === "お知らせ") {
-                    badgeClass = "bg-brand-50 text-brand-700 border border-brand-100";
-                }
+            // カテゴリに応じたバッジ色
+            let badgeClass = "bg-stone-100 text-stone-600";
+            if (item.category === "重要") {
+                badgeClass = "bg-red-50 text-red-600 border border-red-100";
+            } else if (item.category === "お知らせ") {
+                badgeClass = "bg-brand-50 text-brand-700 border border-brand-100";
+            }
 
-                // タイトル部分がリンクである場合（詳細URLがある場合）
-                let titleHtml = `<span class="text-stone-700 font-medium text-sm sm:text-base">${escapeHtml(item.title)}</span>`;
-                if (item.url) {
-                    titleHtml = `<a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="text-stone-700 hover:text-brand-600 font-medium text-sm sm:text-base flex items-center gap-1 hover:underline">
-                        ${escapeHtml(item.title)}
-                        <svg class="w-3.5 h-3.5 inline-block text-stone-400 fill-none stroke-currentColor viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                    </a>`;
-                }
+            // タイトル部分がリンクである場合（詳細URLがある場合）
+            let titleHtml = `<span class="text-stone-700 font-medium">${escapeHtml(item.title)}</span>`;
+            if (item.url) {
+                titleHtml = `<a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="text-stone-700 hover:text-brand-600 font-medium hover:underline inline-flex items-center gap-1">
+                    ${escapeHtml(item.title)}
+                    <svg class="w-3.5 h-3.5 inline-block text-stone-400 fill-none stroke-currentColor viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                </a>`;
+            }
 
-                itemDiv.innerHTML = `
-                    <span class="text-xs sm:text-sm text-stone-400 font-mono flex-shrink-0">${escapeHtml(item.date)}</span>
-                    <span class="px-2.5 py-0.5 rounded text-[11px] font-bold inline-block text-center flex-shrink-0 w-16 ${badgeClass}">${escapeHtml(item.category)}</span>
-                    <div class="flex-grow min-w-0">
+            // 1件分のHTMLを出力 (1行で綺麗に見えるように)
+            newsListContainer.innerHTML = `
+                <div class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 text-xs sm:text-sm">
+                    <span class="text-stone-400 font-mono flex-shrink-0">${escapeHtml(item.date)}</span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold inline-block text-center flex-shrink-0 ${badgeClass}">${escapeHtml(item.category)}</span>
+                    <div class="min-w-0 truncate">
                         ${titleHtml}
                     </div>
-                `;
-                newsListContainer.appendChild(itemDiv);
-            });
+                </div>
+            `;
         }
 
         function escapeHtml(str) {
