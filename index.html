@@ -1348,7 +1348,9 @@
             }
 
             try {
-                const response = await fetch(GAS_NEWS_API_URL);
+                // ブラウザキャッシュを防ぐために時間パラメータをURLに付与
+                const cacheBuster = (GAS_NEWS_API_URL.indexOf('?') === -1 ? '?' : '&') + '_=' + new Date().getTime();
+                const response = await fetch(GAS_NEWS_API_URL + cacheBuster);
                 if (!response.ok) throw new Error("Network response was not ok");
                 const data = await response.json();
                 renderNews(data);
