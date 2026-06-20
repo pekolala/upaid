@@ -1418,7 +1418,7 @@
             newsListContainer.innerHTML = `
                 <div class="flex flex-col sm:flex-row sm:items-start gap-1.5 sm:gap-3 text-xs sm:text-sm w-full">
                     <div class="flex items-center gap-2 flex-shrink-0">
-                        <span class="text-stone-400 font-mono">${escapeHtml(item.date)}</span>
+                        <span class="text-stone-400 font-mono">${escapeHtml(formatNewsDate(item.date))}</span>
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold inline-block text-center ${badgeClass}">${escapeHtml(item.category)}</span>
                     </div>
                     <div class="min-w-0 flex-grow">
@@ -1450,6 +1450,17 @@
             return str.replace(/[&<>'"]/g, 
                 tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
             );
+        }
+
+        // 日付から時刻部分を除去しフォーマットを統一する関数
+        function formatNewsDate(dateString) {
+            if (!dateString) return "";
+            // 文字列としての日付を処理
+            const str = String(dateString).trim();
+            // 半角スペースや「T」で区切られている場合は、左側の日付部分のみを取得
+            const datePart = str.split(/[\sT]+/)[0];
+            // 「-」区切りを「/」に統一
+            return datePart.replace(/-/g, "/");
         }
 
         // ページロード時に読み込み開始
