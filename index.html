@@ -1401,8 +1401,14 @@
 
         const container = document.getElementById('portfolio-container');
 
+        // 表示順を定義
+        const categoryOrder = ["教育・学習", "店舗・サロン", "ビジネス・法人", "採用・LP"];
+
         // HTMLを生成
-        for (const [category, items] of Object.entries(groupedData)) {
+        categoryOrder.forEach(category => {
+            const items = groupedData[category];
+            if (!items) return;
+
             const sectionHtml = `
                 <div class="mb-4">
                     <div class="flex items-center mb-8">
@@ -1451,7 +1457,7 @@
                 </div>
             `;
             container.insertAdjacentHTML('beforeend', sectionHtml);
-        }
+        });
         // お問い合わせフォームの開閉切り替え
         function toggleContactForm() {
             const wrapper = document.getElementById('contact-form-wrapper');
