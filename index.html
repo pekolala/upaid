@@ -1769,6 +1769,13 @@
 
         // イベントリスナーの追加
         carouselStage.addEventListener('pointerdown', (e) => {
+            // クリック開始位置・時間は常に記録（aタグクリック時のしきい値チェックに使用）
+            clickStart = {
+                x: e.clientX,
+                y: e.clientY,
+                time: Date.now()
+            };
+
             // Aタグ（Webサイトを見るボタン）のクリックはドラッグ開始させない
             if (e.target.closest('a')) return;
 
@@ -1776,12 +1783,6 @@
             carouselStage.style.cursor = 'grabbing';
             carouselStartX = e.clientX;
             carouselStartProgress = carouselProgress;
-
-            clickStart = {
-                x: e.clientX,
-                y: e.clientY,
-                time: Date.now()
-            };
 
             cards.forEach(card => card.classList.add('is-dragging'));
             
