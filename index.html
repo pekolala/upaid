@@ -95,7 +95,7 @@
 
         /* 3D Carousel Styles */
         .carousel-container {
-            perspective: 1200px;
+            perspective: 1000px;
             width: 100%;
             position: relative;
             overflow: hidden;
@@ -130,6 +130,9 @@
             transition: none !important;
         }
         @media (max-width: 640px) {
+            .carousel-container {
+                perspective: 700px;
+            }
             .carousel-stage {
                 height: 380px;
             }
@@ -1693,11 +1696,13 @@
             });
         }
 
-        // カルーセルの状態更新（円柱物理モデル）
+        // カルーセルの状態更新（円柱物理モデル・立体感強化版）
         function updateCarousel() {
             const isMobile = window.innerWidth < 640;
-            // 円柱の半径。スマホでは小さくして画面に収める
-            const radius = isMobile ? 290 : 380;
+            
+            // 円柱の半径と左右の圧縮比（スマホでのはみ出し防止とZ軸奥行きの両立）
+            const radius = isMobile ? 320 : 420;
+            const xCompression = isMobile ? 0.72 : 0.95;
 
             cards.forEach((card, i) => {
                 let d = i - carouselProgress;
@@ -1705,21 +1710,27 @@
                 d = d - totalCards * Math.round(d / totalCards);
                 const absD = Math.abs(d);
 
-                // Y軸の角度。合計枚数が8なので、45度ずつ
-                const theta = d * 45;
+                // Y軸の角度。48度ずつ傾けて円柱の丸みを強調
+                const theta = d * 48;
                 const rad = theta * Math.PI / 180;
 
                 // 円柱の丸みに沿ってX, Z座標を決定
-                const tx = Math.sin(rad) * radius;
+                const tx = Math.sin(rad) * radius * xCompression;
                 const tz = Math.cos(rad) * radius - radius; // 手前がZ=0になるように調整
                 const ry = theta;
 
                 // 手前のカードを大きく見せるスケール
-                const scale = Math.max(0.68, 1 - absD * 0.13);
+                const scale = Math.max(0.68, 1 - absD * 0.14);
 
-                // スタイルの適用
+                // スタイルの適用（位置、角度、拡大縮小）
                 card.style.transform = `translate3d(${tx}px, 0, ${tz}px) rotateY(${ry}deg) scale(${scale})`;
                 card.style.zIndex = Math.round(100 - absD * 10);
+
+                // 動的3Dシャドウ（手前のカードほど濃く柔らかい影を落とすことで空間の前後関係を強調）
+                const shadowAlpha = Math.max(0.04, 0.18 - absD * 0.12);
+                const shadowBlur = Math.max(10, 35 - absD * 18);
+                const shadowY = Math.max(4, 20 - absD * 12);
+                card.style.boxShadow = `0 ${shadowY}px ${shadowBlur}px rgba(0, 0, 0, ${shadowAlpha})`;
 
                 // 正面から離れすぎた（裏側にまわった）カードは非表示にする
                 const opacity = Math.max(0, 1 - (absD - 1.5) * 1.5);
