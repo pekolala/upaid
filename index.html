@@ -1517,18 +1517,33 @@
                 <!-- Image container -->
                 <div class="relative overflow-hidden aspect-[4/3] bg-stone-100 flex-shrink-0 select-none">
                     <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover select-none pointer-events-none transform group-hover:scale-102 transition duration-700 ease-in-out">
-                    <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[12px] font-bold px-3 py-1.5 rounded-full text-stone-800 shadow-sm border border-stone-200/50">
+                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-[12px] font-bold px-2.5 py-1 rounded-full text-stone-850 shadow-sm border border-stone-200/50">
                         ${item.type}
                     </div>
                 </div>
                 <!-- Content -->
-                <div class="p-6 flex-grow flex flex-col justify-between bg-white select-none">
-                    <div>
-                        <span class="text-xs font-bold text-brand-600 tracking-wider uppercase mb-1 block">${item.category}</span>
-                        <h4 class="text-lg sm:text-xl font-bold text-stone-850 line-clamp-1">${item.title}</h4>
+                <div class="p-5 flex-grow flex flex-col justify-between bg-white select-none">
+                    <div class="mb-3">
+                        <span class="text-[11px] font-bold text-brand-600 tracking-wider uppercase mb-0.5 block">${item.category}</span>
+                        <h4 class="text-base sm:text-lg font-bold text-stone-850 line-clamp-1">${item.title}</h4>
                     </div>
-                    <div class="mt-4">
-                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="carousel-link block w-full text-center bg-stone-800 hover:bg-brand-600 text-white font-medium py-3 px-4 rounded-xl transition duration-300 flex items-center justify-center shadow-md shadow-stone-850/10 pointer-events-auto">
+                    
+                    <div class="space-y-3">
+                        <!-- スマホ向けリンク（QRコード - PC表示時のみ表示） -->
+                        <div class="hidden sm:flex bg-stone-50 p-2.5 rounded-xl items-center justify-between border border-stone-100 select-none pointer-events-none">
+                            <div class="text-[11px] text-stone-500 leading-tight pr-1.5 text-left">
+                                <span class="flex items-center font-bold text-stone-800 mb-0.5 text-xs">
+                                    <svg class="w-3.5 h-3.5 mr-1 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                    スマホで確認
+                                </span>
+                                カメラで読み取ってスマホでの表示をご確認ください。
+                            </div>
+                            <div class="bg-white p-1 rounded-lg border border-stone-200 shadow-sm flex-shrink-0">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${encodeURIComponent(item.url)}" alt="${item.title}のQRコード" width="48" height="48" class="block rounded-sm">
+                            </div>
+                        </div>
+                        
+                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="carousel-link block w-full text-center bg-stone-850 hover:bg-brand-600 text-white font-medium py-2.5 px-4 rounded-xl transition duration-300 flex items-center justify-center text-sm shadow-md shadow-stone-850/10 pointer-events-auto">
                             <span>Webサイトを見る</span>
                             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                         </a>
@@ -1657,7 +1672,8 @@
         });
 
         function updateDots() {
-            const activeIdx = Math.round(carouselProgress);
+            // ドットの選択もモジュロで決定する
+            const activeIdx = (Math.round(carouselProgress) % totalCards + totalCards) % totalCards;
             Array.from(dotsContainer.children).forEach((dot, idx) => {
                 if (idx === activeIdx) {
                     dot.className = 'w-2 h-2 rounded-full transition-all duration-300 cursor-pointer bg-brand-600 w-5';
@@ -1667,39 +1683,47 @@
             });
         }
 
-        // カルーセルの状態更新
+        // カルーセルの状態更新（円柱物理モデル）
         function updateCarousel() {
             const isMobile = window.innerWidth < 640;
-            const xOffsetMultiplier = isMobile ? 100 : 130;
-            const extraXOffset = isMobile ? 50 : 80;
+            // 円柱の半径。スマホでは小さくして画面に収める
+            const radius = isMobile ? 290 : 380;
 
             cards.forEach((card, i) => {
-                const d = i - carouselProgress;
+                let d = i - carouselProgress;
+                // 最短の円周上の差（無限スクロール用）
+                d = d - totalCards * Math.round(d / totalCards);
                 const absD = Math.abs(d);
-                
-                // 3D Transforms の計算
-                const scale = Math.max(0.65, 1 - absD * 0.15);
-                const rotateY = -Math.sign(d) * Math.min(45, absD * 40);
-                const translateZ = -absD * 120;
-                
-                // 連続的な X 位置の計算
-                const tx = d * xOffsetMultiplier + Math.sign(d) * Math.min(1, absD) * extraXOffset;
-                
+
+                // Y軸の角度。合計枚数が8なので、45度ずつ
+                const theta = d * 45;
+                const rad = theta * Math.PI / 180;
+
+                // 円柱の丸みに沿ってX, Z座標を決定
+                const tx = Math.sin(rad) * radius;
+                const tz = Math.cos(rad) * radius - radius; // 手前がZ=0になるように調整
+                const ry = theta;
+
+                // 手前のカードを大きく見せるスケール
+                const scale = Math.max(0.68, 1 - absD * 0.13);
+
                 // スタイルの適用
-                card.style.transform = `translate3d(${tx}px, 0, ${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+                card.style.transform = `translate3d(${tx}px, 0, ${tz}px) rotateY(${ry}deg) scale(${scale})`;
                 card.style.zIndex = Math.round(100 - absD * 10);
-                
-                // 中央（アクティブ）付近のカード以外は透過とぼかしを適用
-                const opacity = Math.max(0, 1 - (absD - 1.8) * 0.8);
+
+                // 正面から離れすぎた（裏側にまわった）カードは非表示にする
+                const opacity = Math.max(0, 1 - (absD - 1.5) * 1.5);
                 card.style.opacity = opacity;
-                card.style.pointerEvents = opacity < 0.15 ? 'none' : 'auto';
                 
+                // ボタンの有効・無効化の制御（pointer-eventsのバグ修正）
                 if (absD > 0.15) {
                     card.style.filter = 'brightness(0.75) blur(1px)';
-                    card.classList.add('pointer-events-none');
+                    // 中央以外のカードでは、中のaタグへのクリックイベントを無効化する
+                    card.querySelectorAll('a').forEach(a => a.style.pointerEvents = 'none');
                 } else {
                     card.style.filter = 'none';
-                    card.classList.remove('pointer-events-none');
+                    // 中央のカードではaタグをクリック可能にする
+                    card.querySelectorAll('a').forEach(a => a.style.pointerEvents = 'auto');
                 }
             });
         }
@@ -1711,13 +1735,18 @@
             const diff = targetProgress - carouselProgress;
             if (Math.abs(diff) < 0.001) {
                 carouselProgress = targetProgress;
+                
+                // スナップ完了後に、progressの数値を 0 〜 totalCards-1 の範囲に正規化（循環）させる
+                carouselProgress = (carouselProgress % totalCards + totalCards) % totalCards;
+                targetProgress = carouselProgress;
+                
                 updateCarousel();
                 updateDots();
                 carouselAnimFrame = null;
                 return;
             }
             
-            carouselProgress += diff * 0.12; // イージング係数
+            carouselProgress += diff * 0.14; // イージング係数
             updateCarousel();
             carouselAnimFrame = requestAnimationFrame(animateCarousel);
         }
@@ -1756,10 +1785,9 @@
             if (!carouselIsDragging) return;
             const deltaX = e.clientX - carouselStartX;
             const containerWidth = carouselStage.clientWidth || 500;
+            // ドラッグの変位量。無限スクロールなので制限なく更新
             const progressDelta = (deltaX / containerWidth) * 2;
             carouselProgress = carouselStartProgress - progressDelta;
-            
-            carouselProgress = Math.max(-0.2, Math.min(totalCards - 1 + 0.2, carouselProgress));
             updateCarousel();
         });
 
@@ -1773,16 +1801,16 @@
             const deltaY = e.clientY - clickStart.y;
             const deltaTime = Date.now() - clickStart.time;
 
+            // フリック検知
             const isFlick = deltaTime < 250 && Math.abs(deltaX) > 30;
             if (isFlick) {
                 targetProgress = deltaX > 0 
-                    ? Math.max(0, Math.floor(carouselProgress)) 
-                    : Math.min(totalCards - 1, Math.ceil(carouselProgress));
+                    ? Math.floor(carouselProgress)
+                    : Math.ceil(carouselProgress);
             } else {
                 targetProgress = Math.round(carouselProgress);
             }
             
-            targetProgress = Math.max(0, Math.min(totalCards - 1, targetProgress));
             startCarouselAnimation();
         });
 
@@ -1794,33 +1822,43 @@
                     Math.pow(e.clientX - clickStart.x, 2) + 
                     Math.pow(e.clientY - clickStart.y, 2)
                 );
+                
+                // ドラッグ移動量が大きい場合はイベント無効化
                 if (clickDistance > 10 || clickDuration > 300) {
                     e.preventDefault();
+                    e.stopPropagation();
                     return;
                 }
 
-                const activeIndex = Math.round(carouselProgress);
-                if (index !== activeIndex) {
+                const activeIndex = (Math.round(carouselProgress) % totalCards + totalCards) % totalCards;
+                const normalizedIndex = (index % totalCards + totalCards) % totalCards;
+                
+                if (normalizedIndex !== activeIndex) {
+                    // 中央以外のカードをクリックした際は、そのカードを中央に回転スライドさせる
                     e.preventDefault();
-                    targetProgress = index;
+                    let diff = normalizedIndex - activeIndex;
+                    // 最短の円周上の差で回転するよう調整
+                    diff = diff - totalCards * Math.round(diff / totalCards);
+                    targetProgress = carouselProgress + diff;
                     startCarouselAnimation();
                 } else {
+                    // すでに中央（正面）にある場合：aタグ以外の場所クリックで別窓リンクを開く
                     if (!e.target.closest('a')) {
-                        const url = portfolioData[index].url;
+                        const url = portfolioData[normalizedIndex].url;
                         window.open(url, '_blank', 'noopener,noreferrer');
                     }
                 }
             });
         });
 
-        // 矢印ボタン制御
+        // 矢印ボタン制御（最短距離でループ移動）
         document.getElementById('carousel-prev').addEventListener('click', () => {
-            targetProgress = Math.max(0, Math.round(carouselProgress) - 1);
+            targetProgress = Math.round(carouselProgress) - 1;
             startCarouselAnimation();
         });
 
         document.getElementById('carousel-next').addEventListener('click', () => {
-            targetProgress = Math.min(totalCards - 1, Math.round(carouselProgress) + 1);
+            targetProgress = Math.round(carouselProgress) + 1;
             startCarouselAnimation();
         });
 
