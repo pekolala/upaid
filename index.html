@@ -1516,6 +1516,18 @@
             }
         ];
 
+        // 配列をランダムシャッフルする関数（Fisher-Yatesシャッフル）
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // ロード時に実績データをシャッフルして表示順をランダム化
+        shuffleArray(portfolioData);
+
         // --- 1. カルーセルとグリッドの初期生成 ---
         const carouselStage = document.getElementById('carousel-stage');
         const portfolioGrid = document.getElementById('portfolio-grid');
