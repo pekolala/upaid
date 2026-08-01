@@ -2596,103 +2596,20 @@
             }
         }
     </script>
-    <!-- 固定連絡ボタン（LINE・お問い合わせ） -->
-    <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 items-end pointer-events-none">
-        <!-- LINEボタン -->
-        <a href="https://lin.ee/Z2mQxkn" target="_blank" rel="noopener noreferrer" class="pointer-events-auto flex items-center justify-center gap-2 bg-[#06C755] hover:bg-[#05b34c] text-white px-5 py-3 rounded-full font-bold shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 active:scale-95 text-base select-none cursor-pointer filter drop-shadow-md">
-            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-                <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
-            </svg>
-            <span>LINE相談</span>
-        </a>
-        <!-- お問い合わせボタン -->
-        <a href="#contact" onclick="openContactFormIfNeeded()" class="pointer-events-auto flex items-center justify-center gap-2 bg-stone-850 hover:bg-stone-900 text-white px-5 py-3 rounded-full font-bold shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 active:scale-95 text-base select-none cursor-pointer filter drop-shadow-md border border-stone-700">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
-            <span>お問い合わせ</span>
-        </a>
-    </div>
+    
 
 
-    <!-- 浮遊型2軸CTA (PC・スマホ最適表示) -->
-    <div class="fixed bottom-4 right-4 left-4 md:left-auto md:bottom-6 md:right-6 z-50 flex flex-col md:flex-row gap-2.5 pointer-events-auto">
-        <a href="https://lin.ee/Z2mQxkn" target="_blank" class="flex items-center justify-center gap-2 bg-[#06C755] hover:bg-[#05b34c] text-white font-bold py-3 px-6 rounded-full shadow-2xl transition-all transform hover:scale-105 border border-white/20 text-sm">
+    <!-- 浮遊型2軸CTA (PC/タブレット専用: 重なり解消) -->
+    <div class="hidden md:flex fixed bottom-6 right-6 z-50 flex-row gap-3 pointer-events-auto">
+        <a href="https://lin.ee/Z2mQxkn" target="_blank" class="flex items-center justify-center gap-2 bg-[#06C755] hover:bg-[#05b34c] text-white font-bold py-3.5 px-6 rounded-full shadow-2xl transition-all transform hover:scale-105 border border-white/20 text-sm glow-button">
             <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 5.82 2 10.5c0 2.93 1.81 5.5 4.58 7.04-.2.74-.73 2.68-.84 3.09-.13.52.19.51.4.37.16-.11 2.58-1.75 3.63-2.47.73.1 1.48.17 2.23.17 5.52 0 10-3.82 10-8.5S17.52 2 12 2z"/></svg>
             <span>LINEで1分・無料相談</span>
         </a>
-        <a href="javascript:void(0)" onclick="openSimulatorModal()" class="flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-6 rounded-full shadow-2xl transition-all transform hover:scale-105 border border-white/20 text-sm glow-button">
+        <a href="javascript:void(0)" onclick="openSimulatorModal()" class="flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-bold py-3.5 px-6 rounded-full shadow-2xl transition-all transform hover:scale-105 border border-white/20 text-sm glow-button">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 002-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             <span>無料お見積もり・Web診断</span>
         </a>
     </div>
-
-    <!-- スマホ専用ボトム固定ナビゲーションバー -->
-    <div class="md:hidden fixed bottom-0 left-0 w-full z-40 bg-white/95 backdrop-blur-md border-t border-stone-200 p-2 flex justify-around items-center text-xs font-bold shadow-lg">
-        <a href="https://lin.ee/Z2mQxkn" target="_blank" class="flex flex-col items-center text-[#06C755]">
-            <span class="text-lg">💬</span>
-            <span>LINE相談</span>
-        </a>
-        <a href="#contact" class="flex flex-col items-center text-amber-600">
-            <span class="text-lg">✉️</span>
-            <span>無料見積もり</span>
-        </a>
-        <a href="#pricing" class="flex flex-col items-center text-stone-700">
-            <span class="text-lg">💰</span>
-            <span>料金プラン</span>
-        </a>
-    </div>
-
-
-    <!-- 1分料金シミュレーター モーダル -->
-    <div id="simulator-modal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative border border-stone-200">
-            <button onclick="closeSimulatorModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center font-bold">✕</button>
-            <div class="text-center mb-6">
-                <span class="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">1分でわかる</span>
-                <h3 class="text-xl font-extrabold text-stone-900 mt-2">カンタン適正料金診断</h3>
-                <p class="text-xs text-stone-500 mt-1">ご希望の条件を選択してください。</p>
-            </div>
-
-            <form id="simulator-form" onsubmit="calculatePlan(event)" class="space-y-4 text-xs font-medium">
-                <div>
-                    <label class="block font-bold text-stone-800 mb-1">Q1. あなたの業種は？</label>
-                    <select id="sim-industry" class="w-full p-3 rounded-xl border border-stone-300 bg-stone-50 text-stone-800 font-bold focus:ring-2 focus:ring-brand-500">
-                        <option value="55000">整体・サロン・美容</option>
-                        <option value="88000">飲食・店舗販売・和菓子</option>
-                        <option value="88000">BtoB・製造業・工務店</option>
-                        <option value="55000">士業・各種個人事業</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-stone-800 mb-1">Q2. 希望するページ数は？</label>
-                    <select id="sim-pages" class="w-full p-3 rounded-xl border border-stone-300 bg-stone-50 text-stone-800 font-bold focus:ring-2 focus:ring-brand-500">
-                        <option value="0">1〜3ページ (縦長スッキリ構成)</option>
-                        <option value="33000">4〜6ページ (充実構成)</option>
-                    </select>
-                </div>
-
-                <div class="pt-2">
-                    <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 px-4 rounded-xl text-sm shadow-md transition glow-button">
-                        診断結果を見る
-                    </button>
-                </div>
-            </form>
-
-            <div id="sim-result" class="hidden mt-6 pt-4 border-t border-stone-200 text-center">
-                <span class="text-xs text-stone-500 block">推定概算費用</span>
-                <div class="text-2xl font-black text-brand-800 mt-1">
-                    初期 <span id="res-init">55,000</span>円 <span class="text-sm font-normal text-stone-600">(税込)</span>
-                </div>
-                <div class="text-sm font-bold text-amber-600 mt-0.5">
-                    月額 3,300円 <span class="text-xs font-normal text-stone-500">(ドメイン・保守コミコミ)</span>
-                </div>
-                <div class="mt-4 flex gap-2">
-                    <a href="https://lin.ee/Z2mQxkn" target="_blank" class="flex-1 bg-[#06C755] text-white py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1">LINEでこの内容を相談</a>
-                    <a href="#contact" onclick="closeSimulatorModal()" class="flex-1 bg-stone-800 text-white py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center">問い合わせフォームへ</a>
-                </div>
-            </div>
         </div>
     </div>
 
