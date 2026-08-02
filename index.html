@@ -97,55 +97,50 @@
             scrollbar-width: none;  /* Firefox */
         }
 
-        /* 3D Carousel Styles */
-        .carousel-container {
-            perspective: 1000px;
-            position: relative;
+        /* 3D Carousel Styles - 完全設計しなおし */
+        .carousel-outer {
             width: 100%;
             overflow: hidden;
-            touch-action: pan-y;
-        }
-        .carousel-stage {
-            transform-style: preserve-3d;
             position: relative;
-            width: 100%;
-            height: 490px;
-            margin: 0 auto;
             cursor: grab;
+            user-select: none;
+        }
+        .carousel-outer:active { cursor: grabbing; }
+        .carousel-track {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 500px;
+            position: relative;
+            perspective: 1200px;
+            transform-style: preserve-3d;
         }
         .carousel-card {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 330px;
-            height: 460px;
-            margin-top: -230px;
-            margin-left: -165px;
-            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s, filter 0.5s;
-            transform-style: preserve-3d;
-            backface-visibility: hidden;
+            width: 320px;
+            height: 450px;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            background: #fff;
+            flex-shrink: 0;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+                        opacity 0.5s ease,
+                        filter 0.5s ease,
+                        box-shadow 0.5s ease;
+            transform-origin: center center;
+            will-change: transform, opacity;
             user-select: none;
             -webkit-user-drag: none;
-            border-radius: 1.5rem;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-            background: #fff;
-            overflow: hidden;
+            backface-visibility: hidden;
         }
-        .carousel-card.is-dragging {
+        .carousel-card.no-transition {
             transition: none !important;
         }
         @media (max-width: 640px) {
-            .carousel-container {
-                perspective: 600px;
-            }
-            .carousel-stage {
-                height: 370px;
-            }
+            .carousel-track { height: 390px; }
             .carousel-card {
                 width: 250px;
-                height: 330px;
-                margin-top: -165px;
-                margin-left: -125px;
+                height: 340px;
             }
         }
         
@@ -809,10 +804,21 @@
                 <!-- 業種フィルタータブ -->
                 <div id="filter-tabs" class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10"></div>
 
-                <!-- 3D立体カルーセル表示エリア -->
-                <div class="carousel-container max-w-5xl mx-auto mb-12 px-2">
-                    <div id="carousel-stage" class="carousel-stage"></div>
+                <!-- 3D立体カルーセル表示エリア（設計しなおし） -->
+                <div class="w-full max-w-5xl mx-auto mb-12 px-4 sm:px-8">
+                    <div class="carousel-outer" id="carousel-outer">
+                        <div class="carousel-track" id="carousel-track"></div>
+                    </div>
                     <div id="carousel-dots" class="flex items-center justify-center gap-2 mt-6"></div>
+                    <!-- 左右矢印 -->
+                    <div class="flex justify-center gap-4 mt-4">
+                        <button id="carousel-prev" class="w-10 h-10 rounded-full bg-white border border-stone-200 shadow hover:bg-stone-50 flex items-center justify-center transition" aria-label="前へ">
+                            <svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        </button>
+                        <button id="carousel-next" class="w-10 h-10 rounded-full bg-white border border-stone-200 shadow hover:bg-stone-50 flex items-center justify-center transition" aria-label="次へ">
+                            <svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- サンプルサイト グリッド一覧表示エリア -->
@@ -1990,353 +1996,262 @@
         shuffleArray(portfolioData);
 
         // --- 1. カルーセルとグリッドの初期生成 ---
-        const carouselStage = document.getElementById('carousel-stage');
-        const portfolioGrid = document.getElementById('portfolio-grid');
-        const filterTabs = document.getElementById('filter-tabs');
+        const carouselTrack  = document.getElementById('carousel-track');
+        const carouselOuter  = document.getElementById('carousel-outer');
+        const portfolioGrid  = document.getElementById('portfolio-grid');
+        const filterTabs     = document.getElementById('filter-tabs');
 
-        // カルーセル用のカードHTML生成
+        // =============================================
+        // 3Dカルーセル 完全設計しなおし
+        // アプローチ：カードを carousel-track の中央に
+        //   position:absolute / top:50% / left:50%
+        //   translateX(-50%) translateY(-50%) で配置し、
+        //   JS は「中心からの相対オフセット」だけ追加する
+        // =============================================
+
+        // カルーセル用カード生成
         portfolioData.forEach((item, index) => {
             const card = document.createElement('div');
-            card.className = 'carousel-card bg-white rounded-3xl overflow-hidden shadow-xl border border-stone-150 flex flex-col group';
+            card.className = 'carousel-card';
             card.dataset.index = index;
             card.innerHTML = `
-                <!-- Image container -->
-                <div class="relative overflow-hidden aspect-[4/3] bg-stone-100 flex-shrink-0 select-none">
-                    <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover select-none pointer-events-none transform group-hover:scale-102 transition duration-700 ease-in-out">
-                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-[12px] font-bold px-2.5 py-1 rounded-full text-stone-850 shadow-sm border border-stone-200/50">
+                <div class="relative overflow-hidden flex-shrink-0 select-none" style="height:55%;">
+                    <img src="${item.image}" alt="${item.title}"
+                         class="w-full h-full object-cover select-none pointer-events-none"
+                         draggable="false">
+                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-bold px-3 py-1 rounded-full text-stone-850 shadow-sm border border-stone-200/50">
                         ${item.type}
                     </div>
                 </div>
-                <!-- Content -->
-                <div class="p-5 flex-grow flex flex-col justify-between bg-white select-none">
-                    <div class="mb-3">
-                        <span class="text-[11px] font-bold text-brand-600 tracking-wider uppercase mb-0.5 block">${item.category}</span>
-                        <h4 class="text-base sm:text-lg font-bold text-stone-850 line-clamp-1">${item.title}</h4>
+                <div class="p-5 flex flex-col justify-between flex-1 bg-white select-none">
+                    <div>
+                        <span class="text-xs font-bold text-brand-600 tracking-wider uppercase mb-1 block">${item.category}</span>
+                        <h4 class="text-base font-bold text-stone-850 line-clamp-2">${item.title}</h4>
                     </div>
-                    
-                    <div class="space-y-3">
-                        <!-- スマホ向けリンク（QRコード - PC表示時のみ表示） -->
-                        <div class="qr-container bg-stone-50 p-2.5 rounded-xl items-center justify-between border border-stone-100 select-none pointer-events-none">
-                            <div class="text-[11px] text-stone-500 leading-tight pr-1.5 text-left">
-                                <span class="flex items-center font-bold text-stone-800 mb-0.5 text-xs">
-                                    <svg class="w-3.5 h-3.5 mr-1 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                                    スマホで確認
-                                </span>
-                                カメラで読み取ってスマホでの表示をご確認ください。
-                            </div>
-                            <div class="bg-white p-1 rounded-lg border border-stone-200 shadow-sm flex-shrink-0">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${encodeURIComponent(item.url)}" alt="${item.title}のQRコード" width="48" height="48" class="block rounded-sm">
-                            </div>
-                        </div>
-                        
-                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="carousel-link block w-full text-center bg-stone-850 hover:bg-brand-600 text-white font-medium py-2.5 px-4 rounded-xl transition duration-300 flex items-center justify-center text-sm shadow-md shadow-stone-850/10 pointer-events-auto">
-                            <span>Webサイトを見る</span>
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                        </a>
-                    </div>
+                    <a href="${item.url}" target="_blank" rel="noopener noreferrer"
+                       class="mt-4 block w-full text-center bg-stone-900 hover:bg-brand-600 text-white font-bold py-2.5 rounded-xl transition duration-300 text-sm flex items-center justify-center gap-1.5">
+                        Webサイトを見る
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                    </a>
                 </div>
             `;
-            carouselStage.appendChild(card);
+            // 初期位置：中央揃え（CSSの top/left 50% + translateX/Y(-50%)）はCSSで担当
+            card.style.top  = '50%';
+            card.style.left = '50%';
+            carouselTrack.appendChild(card);
         });
 
-        // 通常グリッド用のカード生成関数
+        // ----- グリッド用カード生成関数 -----
         function renderGrid(filteredData) {
             portfolioGrid.innerHTML = filteredData.map(item => `
                 <div class="portfolio-card fade-out bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-stone-200 flex flex-col justify-between group hover:-translate-y-1" data-category="${item.category}">
                     <div>
-                        <!-- Image container -->
                         <div class="relative overflow-hidden aspect-[16/10] bg-stone-100">
                             <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500 ease-in-out" loading="lazy">
-                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-bold px-3 py-1 rounded-full text-stone-850 shadow-sm border border-stone-200/50">
-                                ${item.type}
-                            </div>
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-bold px-3 py-1 rounded-full text-stone-850 shadow-sm border border-stone-200/50">${item.type}</div>
                         </div>
-                        <!-- Content -->
                         <div class="p-5">
                             <span class="text-xs font-bold text-brand-600 tracking-wider uppercase mb-1 block">${item.category}</span>
                             <h4 class="text-lg font-bold text-stone-850 line-clamp-1">${item.title}</h4>
                         </div>
                     </div>
                     <div class="px-5 pb-5 pt-2">
-                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="w-full text-center bg-stone-850 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-300 flex items-center justify-center text-sm shadow-md shadow-stone-850/10">
-                            <span>Webサイトを見る</span>
-                            <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        <a href="${item.url}" target="_blank" rel="noopener noreferrer"
+                           class="w-full text-center bg-stone-900 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-300 flex items-center justify-center text-sm gap-1.5">
+                            Webサイトを見る
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                         </a>
                     </div>
                 </div>
             `).join('');
-
-            // DOMに挿入後、フェードイン処理
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    const cards = portfolioGrid.querySelectorAll('.portfolio-card');
-                    cards.forEach(card => card.classList.remove('fade-out'));
-                });
-            });
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                portfolioGrid.querySelectorAll('.portfolio-card').forEach(c => c.classList.remove('fade-out'));
+            }));
         }
-
-        // 初期状態で全カードをグリッド表示
         renderGrid(portfolioData);
 
-        // フィルターボタンの生成
-        const categories = ["すべて", "店舗・サロン", "ビジネス・法人", "採用・LP", "教育・学習"];
-        let activeFilter = "すべて";
-
+        // ----- フィルタータブ生成 -----
+        const categories = ['すべて', '店舗・サロン', 'ビジネス・法人', '採用・LP', '教育・学習'];
+        let activeFilter = 'すべて';
         categories.forEach(cat => {
             const btn = document.createElement('button');
-            btn.className = `px-5 py-2.5 rounded-full text-sm font-bold border transition-all duration-300 cursor-pointer ${
-                cat === activeFilter 
-                ? 'bg-brand-600 border-brand-600 text-white shadow-md shadow-brand-500/10' 
-                : 'bg-white border-stone-200 text-stone-600 hover:border-stone-400 hover:text-stone-850'
-            }`;
+            const active = 'px-5 py-2.5 rounded-full text-sm font-bold border transition-all duration-300 cursor-pointer bg-brand-600 border-brand-600 text-white shadow-md';
+            const normal = 'px-5 py-2.5 rounded-full text-sm font-bold border transition-all duration-300 cursor-pointer bg-white border-stone-200 text-stone-600 hover:border-stone-400';
+            btn.className = cat === activeFilter ? active : normal;
             btn.textContent = cat;
             btn.addEventListener('click', () => {
                 if (activeFilter === cat) return;
                 activeFilter = cat;
-                
-                // ボタンのアクティブクラス更新
-                Array.from(filterTabs.children).forEach(child => {
-                    if (child.textContent === cat) {
-                        child.className = 'px-5 py-2.5 rounded-full text-sm font-bold border transition-all duration-300 cursor-pointer bg-brand-600 border-brand-600 text-white shadow-md shadow-brand-500/10';
-                    } else {
-                        child.className = 'px-5 py-2.5 rounded-full text-sm font-bold border transition-all duration-300 cursor-pointer bg-white border-stone-200 text-stone-600 hover:border-stone-400 hover:text-stone-850';
-                    }
-                });
-
-                // カードのフィルタリング＆フェードアニメーション
-                const cards = portfolioGrid.querySelectorAll('.portfolio-card');
-                cards.forEach(card => {
-                    card.classList.add('fade-out');
-                });
-
+                Array.from(filterTabs.children).forEach(c => c.className = c.textContent === cat ? active : normal);
+                portfolioGrid.querySelectorAll('.portfolio-card').forEach(c => c.classList.add('fade-out'));
                 setTimeout(() => {
-                    const filtered = cat === "すべて" 
-                        ? portfolioData 
-                        : portfolioData.filter(item => item.category === cat);
-                    renderGrid(filtered);
+                    renderGrid(cat === 'すべて' ? portfolioData : portfolioData.filter(i => i.category === cat));
                 }, 300);
             });
             filterTabs.appendChild(btn);
         });
 
-        // --- 2. 3Dカルーセル制御ロジック ---
-        const cards = Array.from(document.querySelectorAll('.carousel-card'));
-        const totalCards = cards.length;
-        
-        let carouselProgress = 0; // 現在表示中の進捗（実数）
-        let targetProgress = 0;   // 目標の進捗（整数）
-        let carouselIsDragging = false;
-        let carouselStartX = 0;
-        let carouselStartProgress = 0;
-        let carouselAnimFrame = null;
-        let clickStart = { x: 0, y: 0, time: 0 };
+        // =============================================
+        // 3Dカルーセル制御ロジック（完全新設計）
+        //
+        // カードの基準点 = track の中央
+        // 各カードのtransform = translateX(-50%) translateY(-50%)
+        //   + translateX(offset) translateZ(tz) rotateY(ry) scale(s)
+        //
+        // これで left:50% / top:50% との合成によるズレが完全に解消される
+        // =============================================
+        const cCards = Array.from(carouselTrack.querySelectorAll('.carousel-card'));
+        const cTotal  = cCards.length;
+        let cProgress = 0;      // 現在の表示進捗（実数、0 = 最初のカードが中央）
+        let cTarget   = 0;      // 目標値
+        let cDragging = false;
+        let cStartX   = 0;
+        let cStartProg = 0;
+        let cFrame    = null;
+        let cClickStart = { x: 0, y: 0, t: 0 };
 
-        // ドットインジケーターの生成
-        const dotsContainer = document.getElementById('carousel-dots');
-        cards.forEach((_, idx) => {
-            const dot = document.createElement('button');
-            dot.className = `w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${idx === 0 ? 'bg-brand-600 w-5' : 'bg-stone-300'}`;
-            dot.addEventListener('click', () => {
-                targetProgress = idx;
-                startCarouselAnimation();
-            });
-            dotsContainer.appendChild(dot);
+        // ドット生成
+        const dotsEl = document.getElementById('carousel-dots');
+        cCards.forEach((_, i) => {
+            const d = document.createElement('button');
+            d.dataset.idx = i;
+            d.className   = i === 0 ? 'w-5 h-2 rounded-full bg-brand-600 transition-all duration-300' : 'w-2 h-2 rounded-full bg-stone-300 transition-all duration-300';
+            d.addEventListener('click', () => { cTarget = i; cAnimate(); });
+            dotsEl.appendChild(d);
         });
 
-        function updateDots() {
-            // ドットの選択もモジュロで決定する
-            const activeIdx = (Math.round(carouselProgress) % totalCards + totalCards) % totalCards;
-            Array.from(dotsContainer.children).forEach((dot, idx) => {
-                if (idx === activeIdx) {
-                    dot.className = 'w-2 h-2 rounded-full transition-all duration-300 cursor-pointer bg-brand-600 w-5';
-                } else {
-                    dot.className = 'w-2 h-2 rounded-full transition-all duration-300 cursor-pointer bg-stone-300';
-                }
+        function cUpdateDots() {
+            const ai = ((Math.round(cProgress) % cTotal) + cTotal) % cTotal;
+            Array.from(dotsEl.children).forEach((d, i) => {
+                d.className = i === ai
+                    ? 'w-5 h-2 rounded-full bg-brand-600 transition-all duration-300'
+                    : 'w-2 h-2 rounded-full bg-stone-300 transition-all duration-300';
             });
         }
 
-        // カルーセルの状態更新（Apple Coverflow 3Dモデル）
-        function updateCarousel() {
-            const isMobile = window.innerWidth < 640;
-            const spacing = isMobile ? 190 : 310;
+        function cRender() {
+            const mobile  = window.innerWidth < 640;
+            const spacing = mobile ? 180 : 300;   // カード間の水平間隔(px)
+            const maxTz   = mobile ? 60  : 100;   // 奥行き最大値(px)
+            const maxRy   = mobile ? 18  : 24;    // 回転角最大値(deg)
 
-            cards.forEach((card, i) => {
-                let d = i - carouselProgress;
-                // 最短の円周上の差（無限スクロール用）
-                d = d - totalCards * Math.round(d / totalCards);
-                const absD = Math.abs(d);
+            cCards.forEach((card, i) => {
+                let d = i - cProgress;
+                // 最短路（循環）
+                d = d - cTotal * Math.round(d / cTotal);
+                const ad = Math.abs(d);
 
-                // 位置と3D回転角度の計算
-                const tx = d * spacing;
-                const tz = -absD * (isMobile ? 70 : 110);
-                const ry = Math.max(-25, Math.min(25, -d * (isMobile ? 16 : 22)));
-                const scale = Math.max(0.7, 1 - absD * (isMobile ? 0.14 : 0.11));
+                const tx    = d * spacing;                               // 水平オフセット
+                const tz    = -ad * maxTz;                               // 奥行き
+                const ry    = -Math.max(-maxRy, Math.min(maxRy, d * maxRy)); // 回転
+                const scale = Math.max(0.72, 1 - ad * 0.12);            // スケール
+                const op    = ad > 2.5 ? 0 : Math.max(0, 1 - (ad - 1.3) * 1.0);
 
-                // 透明度（正面から2枚以上離れたカードはなめらかにフェードアウト）
-                const opacity = absD > 2.2 ? 0 : Math.max(0, 1 - (absD - 1.2) * 1.2);
+                // ★ 核心：translateX(-50%) translateY(-50%) で自身の中心を基準点に合わせた上で
+                //   水平オフセット・奥行き・回転・スケールを追加
+                card.style.transform = [
+                    'translateX(-50%) translateY(-50%)',
+                    `translateX(${tx}px)`,
+                    `translateZ(${tz}px)`,
+                    `rotateY(${ry}deg)`,
+                    `scale(${scale})`
+                ].join(' ');
 
-                card.style.transform = `translate3d(${tx}px, 0px, ${tz}px) rotateY(${ry}deg) scale(${scale})`;
-                card.style.zIndex = Math.round(100 - absD * 10);
-                card.style.opacity = opacity;
-
-                // 影とフォーカス状態
-                const shadowAlpha = Math.max(0.04, 0.18 - absD * 0.1);
-                card.style.boxShadow = `0 15px 35px rgba(0, 0, 0, ${shadowAlpha})`;
-
-                if (absD > 0.4) {
-                    card.style.filter = 'brightness(0.85) blur(0.5px)';
-                    card.querySelectorAll('a').forEach(a => a.style.pointerEvents = 'none');
-                } else {
-                    card.style.filter = 'none';
-                    card.querySelectorAll('a').forEach(a => a.style.pointerEvents = 'auto');
-                }
+                card.style.zIndex   = Math.round(100 - ad * 10);
+                card.style.opacity  = op;
+                card.style.boxShadow = ad < 0.5
+                    ? '0 20px 40px rgba(0,0,0,0.15)'
+                    : `0 8px 24px rgba(0,0,0,${Math.max(0.04, 0.12 - ad * 0.05)})`;
+                card.style.filter   = ad > 0.5 ? 'brightness(0.88)' : 'none';
+                card.querySelectorAll('a').forEach(a => {
+                    a.style.pointerEvents = ad < 0.3 ? 'auto' : 'none';
+                });
             });
         }
 
-        // アニメーションループ（イージングを効かせたスムーズな吸着）
-        function animateCarousel() {
-            if (carouselIsDragging) return;
-            
-            const diff = targetProgress - carouselProgress;
+        function cAnimate() {
+            if (cDragging) return;
+            const diff = cTarget - cProgress;
             if (Math.abs(diff) < 0.001) {
-                carouselProgress = targetProgress;
-                
-                // スナップ完了後に、progressの数値を 0 〜 totalCards-1 の範囲に正規化（循環）させる
-                carouselProgress = (carouselProgress % totalCards + totalCards) % totalCards;
-                targetProgress = carouselProgress;
-                
-                updateCarousel();
-                updateDots();
-                carouselAnimFrame = null;
+                cProgress = cTarget;
+                cProgress = ((cProgress % cTotal) + cTotal) % cTotal;
+                cTarget   = cProgress;
+                cRender();
+                cUpdateDots();
+                cFrame = null;
                 return;
             }
-            
-            carouselProgress += diff * 0.14; // イージング係数
-            updateCarousel();
-            carouselAnimFrame = requestAnimationFrame(animateCarousel);
+            cProgress += diff * 0.14;
+            cRender();
+            cFrame = requestAnimationFrame(cAnimate);
         }
 
-        function startCarouselAnimation() {
-            if (!carouselAnimFrame) {
-                carouselAnimFrame = requestAnimationFrame(animateCarousel);
-            }
-        }
+        function cStart() { if (!cFrame) cFrame = requestAnimationFrame(cAnimate); }
 
-        // イベントリスナーの追加
-        carouselStage.addEventListener('pointerdown', (e) => {
-            // クリック開始位置・時間は常に記録（aタグクリック時のしきい値チェックに使用）
-            clickStart = {
-                x: e.clientX,
-                y: e.clientY,
-                time: Date.now()
-            };
-
-            // Aタグ（Webサイトを見るボタン）のクリックはドラッグ開始させない
+        // ポインターイベント
+        carouselOuter.addEventListener('pointerdown', e => {
+            cClickStart = { x: e.clientX, y: e.clientY, t: Date.now() };
             if (e.target.closest('a')) return;
-
-            carouselIsDragging = true;
-            carouselStage.style.cursor = 'grabbing';
-            carouselStartX = e.clientX;
-            carouselStartProgress = carouselProgress;
-
-            cards.forEach(card => card.classList.add('is-dragging'));
-            
-            if (carouselAnimFrame) {
-                cancelAnimationFrame(carouselAnimFrame);
-                carouselAnimFrame = null;
-            }
+            cDragging   = true;
+            cStartX     = e.clientX;
+            cStartProg  = cProgress;
+            carouselOuter.style.cursor = 'grabbing';
+            cCards.forEach(c => c.classList.add('no-transition'));
+            if (cFrame) { cancelAnimationFrame(cFrame); cFrame = null; }
+        });
+        window.addEventListener('pointermove', e => {
+            if (!cDragging) return;
+            const dx = e.clientX - cStartX;
+            const w  = carouselOuter.clientWidth || 600;
+            cProgress = cStartProg - (dx / w) * 2.5;
+            cRender();
+        });
+        window.addEventListener('pointerup', e => {
+            if (!cDragging) return;
+            cDragging = false;
+            carouselOuter.style.cursor = 'grab';
+            cCards.forEach(c => c.classList.remove('no-transition'));
+            const dx = e.clientX - cClickStart.x;
+            const dt = Date.now() - cClickStart.t;
+            const isFlick = dt < 250 && Math.abs(dx) > 30;
+            cTarget = isFlick
+                ? (dx > 0 ? Math.floor(cProgress) : Math.ceil(cProgress))
+                : Math.round(cProgress);
+            cStart();
         });
 
-        window.addEventListener('pointermove', (e) => {
-            if (!carouselIsDragging) return;
-            const deltaX = e.clientX - carouselStartX;
-            const containerWidth = carouselStage.clientWidth || 500;
-            // ドラッグの変位量。無限スクロールなので制限なく更新
-            const progressDelta = (deltaX / containerWidth) * 2;
-            carouselProgress = carouselStartProgress - progressDelta;
-            updateCarousel();
-        });
+        // カードクリック
+        cCards.forEach((card, idx) => {
+            card.addEventListener('click', e => {
+                const dist = Math.hypot(e.clientX - cClickStart.x, e.clientY - cClickStart.y);
+                const dt   = Date.now() - cClickStart.t;
+                if (dist > 20 || dt > 400) { e.preventDefault(); return; }
 
-        window.addEventListener('pointerup', (e) => {
-            if (!carouselIsDragging) return;
-            carouselIsDragging = false;
-            carouselStage.style.cursor = 'grab';
-            cards.forEach(card => card.classList.remove('is-dragging'));
-
-            const deltaX = e.clientX - clickStart.x;
-            const deltaY = e.clientY - clickStart.y;
-            const deltaTime = Date.now() - clickStart.time;
-
-            // フリック検知
-            const isFlick = deltaTime < 250 && Math.abs(deltaX) > 30;
-            if (isFlick) {
-                targetProgress = deltaX > 0 
-                    ? Math.floor(carouselProgress)
-                    : Math.ceil(carouselProgress);
-            } else {
-                targetProgress = Math.round(carouselProgress);
-            }
-            
-            startCarouselAnimation();
-        });
-
-        // カードクリック時の制御
-        cards.forEach((card, index) => {
-            card.addEventListener('click', (e) => {
-                const clickDuration = Date.now() - clickStart.time;
-                const clickDistance = Math.sqrt(
-                    Math.pow(e.clientX - clickStart.x, 2) + 
-                    Math.pow(e.clientY - clickStart.y, 2)
-                );
-                
-                // ドラッグ移動量が大きい場合はイベント無効化
-                if (clickDistance > 25 || clickDuration > 400) {
+                const ai = ((Math.round(cProgress) % cTotal) + cTotal) % cTotal;
+                const ni = ((idx % cTotal) + cTotal) % cTotal;
+                if (ni !== ai) {
                     e.preventDefault();
-                    e.stopPropagation();
-                    return;
-                }
-
-                const activeIndex = (Math.round(carouselProgress) % totalCards + totalCards) % totalCards;
-                const normalizedIndex = (index % totalCards + totalCards) % totalCards;
-                
-                if (normalizedIndex !== activeIndex) {
-                    // 中央以外のカードをクリックした際は、そのカードを中央に回転スライドさせる
-                    e.preventDefault();
-                    let diff = normalizedIndex - activeIndex;
-                    // 最短の円周上の差で回転するよう調整
-                    diff = diff - totalCards * Math.round(diff / totalCards);
-                    targetProgress = carouselProgress + diff;
-                    startCarouselAnimation();
+                    let diff = ni - ai;
+                    diff = diff - cTotal * Math.round(diff / cTotal);
+                    cTarget = cProgress + diff;
+                    cStart();
                 } else {
-                    // すでに中央（正面）にある場合：aタグ以外の場所クリックで別窓リンクを開く
                     if (!e.target.closest('a')) {
-                        const url = portfolioData[normalizedIndex].url;
-                        window.open(url, '_blank', 'noopener,noreferrer');
+                        window.open(portfolioData[ni].url, '_blank', 'noopener,noreferrer');
                     }
                 }
             });
         });
 
-        // 矢印ボタン制御（存在する場合のみリスナー登録）
-        const carouselPrevBtn = document.getElementById('carousel-prev');
-        if (carouselPrevBtn) {
-            carouselPrevBtn.addEventListener('click', () => {
-                targetProgress = Math.round(carouselProgress) - 1;
-                startCarouselAnimation();
-            });
-        }
+        // 矢印ボタン
+        const prevBtn = document.getElementById('carousel-prev');
+        const nextBtn = document.getElementById('carousel-next');
+        if (prevBtn) prevBtn.addEventListener('click', () => { cTarget = Math.round(cProgress) - 1; cStart(); });
+        if (nextBtn) nextBtn.addEventListener('click', () => { cTarget = Math.round(cProgress) + 1; cStart(); });
 
-        const carouselNextBtn = document.getElementById('carousel-next');
-        if (carouselNextBtn) {
-            carouselNextBtn.addEventListener('click', () => {
-                targetProgress = Math.round(carouselProgress) + 1;
-                startCarouselAnimation();
-            });
-        }
-
-        // 初期表示設定
-        updateCarousel();
-        window.addEventListener('resize', updateCarousel);
+        // 初期描画
+        cRender();
+        window.addEventListener('resize', cRender);
         // お問い合わせフォームの開閉切り替え
         function toggleContactForm() {
             const wrapper = document.getElementById('contact-form-wrapper');
