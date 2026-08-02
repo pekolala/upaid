@@ -106,6 +106,7 @@
             position: relative;
             cursor: grab;
             user-select: none;
+            touch-action: pan-y;
         }
         .carousel-outer:active { cursor: grabbing; }
         .carousel-track {
@@ -2221,37 +2222,61 @@
 
         function cStart() { if (!cFrame) cFrame = requestAnimationFrame(cAnimate); }
 
-        // ポインターイベント
+        // ポインター＆タッチイベント（スマホ左右スワイプ完全対応）
         carouselOuter.addEventListener('pointerdown', e => {
             cClickStart = { x: e.clientX, y: e.clientY, t: Date.now() };
             if (e.target.closest('a')) return;
+            
             cDragging   = true;
             cStartX     = e.clientX;
             cStartProg  = cProgress;
             carouselOuter.style.cursor = 'grabbing';
+            try { carouselOuter.setPointerCapture(e.pointerId); } catch(err) {}
             cCards.forEach(c => c.classList.add('no-transition'));
             if (cFrame) { cancelAnimationFrame(cFrame); cFrame = null; }
         });
+
         window.addEventListener('pointermove', e => {
             if (!cDragging) return;
             const dx = e.clientX - cStartX;
-            const w  = carouselOuter.clientWidth || 600;
-            cProgress = cStartProg - (dx / w) * 2.5;
+            const isMobile = window.innerWidth < 640;
+            // スマホ表示ではスワイプの追従感を高めるため感度倍率を約3.2に調整
+            const sensitivity = isMobile ? 3.2 : 2.5;
+            const w  = carouselOuter.clientWidth || 360;
+            cProgress = cStartProg - (dx / w) * sensitivity;
             cRender();
         });
-        window.addEventListener('pointerup', e => {
+
+        const endDrag = e => {
             if (!cDragging) return;
             cDragging = false;
             carouselOuter.style.cursor = 'grab';
+            try { carouselOuter.releasePointerCapture(e.pointerId); } catch(err) {}
             cCards.forEach(c => c.classList.remove('no-transition'));
+            
             const dx = e.clientX - cClickStart.x;
             const dt = Date.now() - cClickStart.t;
-            const isFlick = dt < 250 && Math.abs(dx) > 30;
-            cTarget = isFlick
-                ? (dx > 0 ? Math.floor(cProgress) : Math.ceil(cProgress))
-                : Math.round(cProgress);
+            const isMobile = window.innerWidth < 640;
+            
+            // スマホでのフリック検知しきい値
+            const flickThreshold = isMobile ? 20 : 30;
+            const isFlick = dt < 300 && Math.abs(dx) > flickThreshold;
+            
+            if (isFlick) {
+                // 左スワイプ（dx < 0）なら次のカード（+1）、右スワイプ（dx > 0）なら前のカード（-1）
+                cTarget = dx < 0 ? Math.ceil(cProgress) : Math.floor(cProgress);
+                // もし現在地と目標が同じなら確実に1つ移動
+                if (cTarget === Math.round(cStartProg)) {
+                    cTarget = dx < 0 ? Math.round(cStartProg) + 1 : Math.round(cStartProg) - 1;
+                }
+            } else {
+                cTarget = Math.round(cProgress);
+            }
             cStart();
-        });
+        };
+
+        window.addEventListener('pointerup', endDrag);
+        window.addEventListener('pointercancel', endDrag);
 
         // カードクリック
         cCards.forEach((card, idx) => {
