@@ -2459,9 +2459,18 @@
             }
 
             try {
+                // タイムアウトを設定 (6秒)
+                const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+                const timeoutId = controller ? setTimeout(() => controller.abort(), 6000) : null;
+
                 // ブラウザキャッシュを防ぐために時間パラメータをURLに付与
                 const cacheBuster = (GAS_NEWS_API_URL.indexOf('?') === -1 ? '?' : '&') + '_=' + new Date().getTime();
-                const response = await fetch(GAS_NEWS_API_URL + cacheBuster);
+                const response = await fetch(GAS_NEWS_API_URL + cacheBuster, {
+                    signal: controller ? controller.signal : undefined
+                });
+
+                if (timeoutId) clearTimeout(timeoutId);
+
                 if (!response.ok) throw new Error("Network response was not ok");
                 const data = await response.json();
                 renderNews(data);
@@ -2583,8 +2592,12 @@
             return datePart.replace(/-/g, "/");
         }
 
-        // ページロード時に読み込み開始
-        window.addEventListener('DOMContentLoaded', loadNews);
+        // ページロード時に読み込み開始（すでにDOMContentLoaded済みの場合は即時実行）
+        if (document.readyState === 'loading') {
+            window.addEventListener('DOMContentLoaded', loadNews);
+        } else {
+            loadNews();
+        }
 
         // お問い合わせフォームを必要に応じて開く
         function openContactFormIfNeeded() {
