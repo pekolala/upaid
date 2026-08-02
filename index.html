@@ -97,9 +97,11 @@
             scrollbar-width: none;  /* Firefox */
         }
 
-        /* 3D Carousel - getBoundingClientRect方式 */
+        /* 3D Carousel - 画面中央揃えの確実化 */
         .carousel-outer {
             width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
             overflow: hidden;
             position: relative;
             cursor: grab;
@@ -108,8 +110,10 @@
         .carousel-outer:active { cursor: grabbing; }
         .carousel-track {
             height: 500px;
+            width: 100%;
             position: relative;
             perspective: 1200px;
+            margin: 0 auto;
         }
         .carousel-card {
             position: absolute;
@@ -2128,15 +2132,14 @@
             const cardW   = mobile ? 250 : 320;
             const cardH   = mobile ? 340 : 450;
             const trackH  = mobile ? 390 : 500;
-            // getBoundingClientRectはレイアウトを強制計算し常に正確な値を返す
-            const rect    = carouselTrack.getBoundingClientRect();
-            const trackW  = rect.width > 10 ? rect.width : (carouselOuter.offsetWidth || window.innerWidth);
-            // カードの左上角をトラック中央に置く座標
-            const cx      = Math.round((trackW - cardW) / 2);
-            const cy      = Math.round((trackH - cardH) / 2);
-            const spacing = mobile ? 170 : 290;
-            const maxTz   = mobile ? 50  : 90;
-            const maxRy   = mobile ? 18  : 24;
+            
+            // 外枠コンテナ(carouselOuter)の実表示幅を取得（PC表示で左寄りにズレるのを完全防ぐ）
+            const outerWidth = carouselOuter.clientWidth || carouselTrack.clientWidth || window.innerWidth;
+            const cx         = Math.round((outerWidth - cardW) / 2);
+            const cy         = Math.round((trackH - cardH) / 2);
+            const spacing    = mobile ? 170 : 290;
+            const maxTz      = mobile ? 50  : 90;
+            const maxRy      = mobile ? 18  : 24;
 
             cCards.forEach((card, i) => {
                 let d = i - cProgress;
