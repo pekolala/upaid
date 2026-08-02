@@ -2445,25 +2445,24 @@
         const GAS_NEWS_API_URL = "https://script.google.com/macros/s/AKfycbzcoVs7JR8XvwIZEzsSoz9f3Smpc9L2pq1fsqijQTrAKOj7kKzXjK3-zqDiJs3_RaKc/exec"; // ここにスプレッドシートからデータを出力するGASのウェブアプリURLを貼り付けます
 
         const demoNews = [
-            { date: "2026/06/20", category: "お知らせ", title: "お知らせ機能が追加されました。スプレッドシートにお知らせを追加してください。", url: "ここにスプレッドシートの4列目（内容）に入力したテキストが表示されます。長文の掲載や、詳細な案内をアコーディオン形式でスマートに折りたたんで表示することが可能です。" }
+            { date: "2026-06-20T15:00:00.000Z", category: "お知らせ", title: "ホームページデビュー応援キャンペーン‼", url: "先着３社スタンダードプラン10,000円OFF　「キャンペーンのお知らせ見ました」とお伝えください" },
+            { date: "2026-06-19T15:00:00.000Z", category: "お知らせ", title: "HPデビューキャンペーン実施中！！", url: "先着３社スタンダードプラン10,000円OFF　「キャンペーンのお知らせ見ました」とお伝えください" }
         ];
 
         async function loadNews() {
             const newsListContainer = document.getElementById('news-list');
             if (!newsListContainer) return;
 
-            // GAS_NEWS_API_URL が設定されていない場合はデモデータを表示
-            if (!GAS_NEWS_API_URL) {
-                renderNews(demoNews);
-                return;
-            }
+            // ローディング表示を即座に最新初期データで置き換え
+            renderNews(demoNews);
+
+            if (!GAS_NEWS_API_URL) return;
 
             try {
-                // タイムアウトを設定 (6秒)
+                // バックグラウンドで最新データを取得（3.5秒タイムアウト）
                 const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-                const timeoutId = controller ? setTimeout(() => controller.abort(), 6000) : null;
+                const timeoutId = controller ? setTimeout(() => controller.abort(), 3500) : null;
 
-                // ブラウザキャッシュを防ぐために時間パラメータをURLに付与
                 const cacheBuster = (GAS_NEWS_API_URL.indexOf('?') === -1 ? '?' : '&') + '_=' + new Date().getTime();
                 const response = await fetch(GAS_NEWS_API_URL + cacheBuster, {
                     signal: controller ? controller.signal : undefined
@@ -2471,16 +2470,14 @@
 
                 if (timeoutId) clearTimeout(timeoutId);
 
-                if (!response.ok) throw new Error("Network response was not ok");
-                const data = await response.json();
-                renderNews(data);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        renderNews(data);
+                    }
+                }
             } catch (error) {
-                console.error("Failed to load news:", error);
-                // エラー時はデモデータでフォールバック
-                renderNews([
-                    { date: "エラー", category: "システム", title: "お知らせの読み込みに失敗しました。URLまたはアクセス権限を確認してください。" },
-                    ...demoNews
-                ]);
+                console.warn("GAS news fetch skipped or timed out, using default news:", error);
             }
         }
 
