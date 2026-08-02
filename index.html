@@ -2015,7 +2015,7 @@
             card.className = 'carousel-card';
             card.dataset.index = index;
             card.innerHTML = `
-                <div class="relative overflow-hidden flex-shrink-0 select-none" style="height:55%;">
+                <div class="relative overflow-hidden flex-shrink-0 select-none" style="height:48%;">
                     <img src="${item.image}" alt="${item.title}"
                          class="w-full h-full object-cover select-none pointer-events-none"
                          draggable="false">
@@ -2023,15 +2023,30 @@
                         ${item.type}
                     </div>
                 </div>
-                <div class="p-5 flex flex-col justify-between flex-1 bg-white select-none">
+                <div class="p-4 flex flex-col justify-between flex-1 bg-white select-none">
                     <div>
-                        <span class="text-xs font-bold text-brand-600 tracking-wider uppercase mb-1 block">${item.category}</span>
-                        <h4 class="text-base font-bold text-stone-850 line-clamp-2">${item.title}</h4>
+                        <span class="text-[11px] font-bold text-brand-600 tracking-wider uppercase mb-0.5 block">${item.category}</span>
+                        <h4 class="text-sm sm:text-base font-bold text-stone-850 line-clamp-1">${item.title}</h4>
                     </div>
+
+                    <!-- PC表示用 QRコード案内 -->
+                    <div class="hidden sm:flex bg-stone-50 p-2 rounded-xl items-center justify-between border border-stone-100 my-2 select-none pointer-events-none">
+                        <div class="text-[10px] text-stone-500 leading-tight pr-1 text-left">
+                            <span class="flex items-center font-bold text-stone-800 mb-0.5 text-[11px]">
+                                <svg class="w-3 h-3 mr-1 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                スマホで実機確認
+                            </span>
+                            カメラで読み取り
+                        </div>
+                        <div class="bg-white p-0.5 rounded border border-stone-200 shadow-sm flex-shrink-0">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=${encodeURIComponent(item.url)}" alt="${item.title}QRコード" width="40" height="40" class="block rounded-sm">
+                        </div>
+                    </div>
+
                     <a href="${item.url}" target="_blank" rel="noopener noreferrer"
-                       class="mt-4 block w-full text-center bg-stone-900 hover:bg-brand-600 text-white font-bold py-2.5 rounded-xl transition duration-300 text-sm flex items-center justify-center gap-1.5">
+                       class="block w-full text-center bg-stone-900 hover:bg-brand-600 text-white font-bold py-2 rounded-xl transition duration-300 text-xs sm:text-sm flex items-center justify-center gap-1.5">
                         Webサイトを見る
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     </a>
                 </div>
             `;
@@ -2049,7 +2064,21 @@
                         </div>
                         <div class="p-5">
                             <span class="text-xs font-bold text-brand-600 tracking-wider uppercase mb-1 block">${item.category}</span>
-                            <h4 class="text-lg font-bold text-stone-850 line-clamp-1">${item.title}</h4>
+                            <h4 class="text-lg font-bold text-stone-850 line-clamp-1 mb-3">${item.title}</h4>
+
+                            <!-- PC表示用 QRコード案内 -->
+                            <div class="hidden sm:flex bg-stone-50 p-2.5 rounded-xl items-center justify-between border border-stone-100 select-none">
+                                <div class="text-xs text-stone-500 leading-tight pr-1.5 text-left">
+                                    <span class="flex items-center font-bold text-stone-800 mb-0.5 text-xs">
+                                        <svg class="w-3.5 h-3.5 mr-1 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                        スマホで実機確認
+                                    </span>
+                                    カメラでQRコードを読み取って確認できます
+                                </div>
+                                <div class="bg-white p-1 rounded-lg border border-stone-200 shadow-sm flex-shrink-0">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${encodeURIComponent(item.url)}" alt="${item.title}QRコード" width="48" height="48" class="block rounded-sm">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="px-5 pb-5 pt-2">
@@ -2061,6 +2090,7 @@
                     </div>
                 </div>
             `).join('');
+
             requestAnimationFrame(() => requestAnimationFrame(() => {
                 portfolioGrid.querySelectorAll('.portfolio-card').forEach(c => c.classList.remove('fade-out'));
             }));
