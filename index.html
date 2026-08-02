@@ -2249,8 +2249,18 @@
         if (prevBtn) prevBtn.addEventListener('click', () => { cTarget = Math.round(cProgress) - 1; cStart(); });
         if (nextBtn) nextBtn.addEventListener('click', () => { cTarget = Math.round(cProgress) + 1; cStart(); });
 
-        // 初期描画
-        cRender();
+        // 初期描画（RAFで遅延させてレイアウト計算後に確実に実行）
+        function cInit() {
+            const w = carouselTrack.offsetWidth;
+            if (w === 0) {
+                // まだレイアウト未計算の場合は次のフレームに持ち越す
+                requestAnimationFrame(cInit);
+                return;
+            }
+            cRender();
+        }
+        requestAnimationFrame(cInit);
+        window.addEventListener('load', cRender);
         window.addEventListener('resize', cRender);
         // お問い合わせフォームの開閉切り替え
         function toggleContactForm() {
