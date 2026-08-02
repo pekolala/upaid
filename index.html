@@ -2334,16 +2334,22 @@
             });
         });
 
-        // 矢印ボタン制御（最短距離でループ移動）
-        document.getElementById('carousel-prev').addEventListener('click', () => {
-            targetProgress = Math.round(carouselProgress) - 1;
-            startCarouselAnimation();
-        });
+        // 矢印ボタン制御（存在する場合のみリスナー登録）
+        const carouselPrevBtn = document.getElementById('carousel-prev');
+        if (carouselPrevBtn) {
+            carouselPrevBtn.addEventListener('click', () => {
+                targetProgress = Math.round(carouselProgress) - 1;
+                startCarouselAnimation();
+            });
+        }
 
-        document.getElementById('carousel-next').addEventListener('click', () => {
-            targetProgress = Math.round(carouselProgress) + 1;
-            startCarouselAnimation();
-        });
+        const carouselNextBtn = document.getElementById('carousel-next');
+        if (carouselNextBtn) {
+            carouselNextBtn.addEventListener('click', () => {
+                targetProgress = Math.round(carouselProgress) + 1;
+                startCarouselAnimation();
+            });
+        }
 
         // 初期表示設定
         updateCarousel();
